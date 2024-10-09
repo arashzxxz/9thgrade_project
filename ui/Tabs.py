@@ -30,13 +30,17 @@ class setting_tab(QWidget):
         self.sections_layout=QVBoxLayout(self)
         self.settings_sections_tab=QWidget()
         self.customization_content=self.settings_customization()
+        self.notification_content=self.settings_notification()
+        self.data_content=self.settings_data()
         self.sections_layout.addWidget(self.customization_header,20)
         self.sections_layout.addWidget(self.section_seperator1,10)
         self.sections_layout.addWidget(self.customization_content)
         self.sections_layout.addWidget(self.notification_header,20)
         self.sections_layout.addWidget(self.section_seperator2,10)
+        self.sections_layout.addWidget(self.notification_content)
         self.sections_layout.addWidget(self.data_header,20)
         self.sections_layout.addWidget(self.section_seperator3,10)
+        self.sections_layout.addWidget(self.data_content)
         self.settings_sections_tab.setLayout(self.sections_layout)
         self.settings_main_tabs=QTabWidget(self)
         self.settings_main_tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
@@ -79,6 +83,46 @@ class setting_tab(QWidget):
 
         
         return self.settings_customization_widget
+    
+    #create notification layout
+    def settings_notification(self):
+
+        #create buttons and texts
+        self.change_sending_time_text=QLabel("Change sending time : ",self)
+        self.change_sending_time_button=QDateEdit(self)
+        self.change_sending_time_submit_button=QPushButton("Change time",self)
+        #------------------------
+
+        #create main widget and main layout
+        self.settings_notification_widget=QWidget(self)
+        self.grid1=QGridLayout(self)
+        self.grid1.addWidget(self.change_sending_time_text,0,0,1,2)
+        self.grid1.addWidget(self.change_sending_time_button,0,5,1,2)
+        self.grid1.addWidget(self.change_sending_time_submit_button,1,0,1,7)
+        self.settings_notification_widget.setLayout(self.grid1)
+        #----------------------------------
+
+        
+        return self.settings_notification_widget
+    
+    #create data layout
+    def settings_data(self):
+
+        #create buttons and texts
+        self.delete_all_apps_data=QPushButton("Delete all data",self)
+        self.delete_all_users_data=QPushButton("Delete all users data",self)
+        #------------------------
+
+        #create main widget and main layout
+        self.settings_data_widget=QWidget(self)
+        self.grid2=QGridLayout(self)
+        self.grid2.addWidget(self.delete_all_users_data,0,0)
+        self.grid2.addWidget(self.delete_all_apps_data,0,1)
+        self.settings_data_widget.setLayout(self.grid2)
+        #----------------------------------
+
+        
+        return self.settings_data_widget
 class setting_customization_tab(QWidget):
     def __init__(self):
         super().__init__()
