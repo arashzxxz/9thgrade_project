@@ -3,10 +3,10 @@ import sys
 import random
 import requests
 import os
-from ui import Menu,Tabs,styles
+from ui import Menu, Settings_Tab,styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
-from PyQt5.QtWidgets import QApplication,QMainWindow,QScrollArea,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
+from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase,QStandardItemModel,QStandardItem
 class mainw(QMainWindow):
     def __init__(self):
@@ -33,9 +33,9 @@ class mainw(QMainWindow):
         #create all of the main tabs
         self.content_tab1=self.createtab1()
         self.content_tab2=self.createtab2()
-        self.settings_tab=Tabs.setting_tab()
+        self.settings_tab=Settings_Tab.setting_tab()
         self.settings_tab.setObjectName("settings_tab")
-        self.settings_customization_tab=Tabs.setting_customization_tab()
+        self.settings_customization_tab=Settings_Tab.setting_customization_tab()
         #---------------------------
 
         #connect all of the tabs

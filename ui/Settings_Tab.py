@@ -2,7 +2,7 @@
 from ui import styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
-from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
+from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QTimeEdit,QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
 
 
@@ -89,7 +89,7 @@ class setting_tab(QWidget):
 
         #create buttons and texts
         self.change_sending_time_text=QLabel("Change sending time : ",self)
-        self.change_sending_time_button=QDateEdit(self)
+        self.change_sending_time_button=QTimeEdit(self)
         self.change_sending_time_submit_button=QPushButton("Change time",self)
         #------------------------
 
