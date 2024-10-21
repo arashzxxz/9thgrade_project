@@ -7,7 +7,6 @@ from PyQt5.QtCore import QSize
 class menu(QWidget):
     def __init__(self):
         super().__init__()
-
         #create buttons and groupe them
         self.menu_button=QRadioButton("",self)
         self.home_button=QRadioButton("",self)
@@ -22,59 +21,8 @@ class menu(QWidget):
         self.menus_buttons_group.addButton(self.home_button)
         self.menus_buttons_group.addButton(self.status_button)
         self.menus_buttons_group.addButton(self.setting_button)
+        self.setContentsMargins(10,10,0,10)
 
-        #set the icons
-        self.setStyleSheet("""
-        QRadioButton#menub::indicator::unchecked{
-                           background-color: transparent;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png)
-                           
-        }
-        QRadioButton#menub::indicator::checked{
-                           background-color: Green;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png)
-                           
-        }
-        QRadioButton#settingb::indicator::unchecked{
-                           background-color: transparent;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png)
-                           
-        }
-        QRadioButton#settingb::indicator::checked{
-                           background-color: Green;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png)
-                           
-        }
-        QRadioButton#homeb::indicator::unchecked{
-                           background-color: transparent;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png)
-                           
-        }
-        QRadioButton#homeb::indicator::checked{
-                           background-color: Green;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png)
-                           
-        }
-        QRadioButton#statusb::indicator::unchecked{
-                           background-color: transparent;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png)
-                           
-        }
-        QRadioButton#statusb::indicator::checked{
-                           background-color: Green;
-                           border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png)
-                           
-        }
-        """)
-        #--------------
 
         #-------------------------------
 
@@ -87,6 +35,7 @@ class menu(QWidget):
         self.menu_layout.addWidget(QLabel(""),3,0)
         self.menu_layout.addWidget(QLabel(""),4,0)
         self.menu_layout.addWidget(self.setting_button,5,0)
+        self.menu_layout.setContentsMargins(0,0,0,0)
         self.setLayout(self.menu_layout)
         #------------------
 
