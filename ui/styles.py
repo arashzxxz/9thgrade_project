@@ -43,61 +43,61 @@ class style_sheets(QWidget):
     }
     """
     main_style="""
-    background-color: """+backgroundc+""";
-    QPushButton{
-        background-color: """+widgetsc+""";
-    }
-    QPushButton:hover{
-        background-color: """+widgets_hoverc+""";
-    }
+        background-color : """+backgroundc+""";
+        QPushButton{
+        background-color : """+widgetsc+""";
+        }
+        QPushButton:hover{
+        background-color : """+widgets_hoverc+""";
+        }
     """
     menu_style="""
         QRadioButton#menub::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png);
                            
         }
         QRadioButton#menub::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png);
                            
         }
         QRadioButton#settingb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png);
                            
         }
         QRadioButton#settingb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png);
                            
         }
         QRadioButton#homeb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png);
                            
         }
         QRadioButton#homeb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png);
                            
         }
         QRadioButton#statusb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png);
                            
         }
         QRadioButton#statusb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png)
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png);
                            
         }
     QRadioButton{
