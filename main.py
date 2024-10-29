@@ -40,6 +40,7 @@ class mainw(QMainWindow):
         self.settings_tab.setObjectName("settings_tab")
         self.settings_customization_tab=Settings_Tab.setting_customization_tab()
         self.log_in_tab=log_in_and_sign_in.Log_in()
+        self.sign_in_tab=log_in_and_sign_in.Sign_in()
         #---------------------------
 
         #connect all of the tabs
@@ -49,7 +50,8 @@ class mainw(QMainWindow):
         self.tabs.addTab(self.settings_tab,"")
         self.tabs.addTab(self.settings_customization_tab,"")
         self.tabs.addTab(self.log_in_tab,"")
-        self.tabs.setCurrentIndex(4)
+        self.tabs.addTab(self.sign_in_tab,"")
+        self.tabs.setCurrentIndex(5)
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
         #-----------------------
 
