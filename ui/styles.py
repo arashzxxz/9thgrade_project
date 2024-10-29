@@ -100,6 +100,18 @@ class style_sheets(QWidget):
                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png);
                            
         }
+        QRadioButton#usersb::indicator::unchecked{
+                           background-color: transparent;
+                           border-radius: 0px ;
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/users.png);
+                           
+        }
+        QRadioButton#usersb::indicator::checked{
+                           background-color: """+selected_tabc+""";
+                           border-radius: 0px ;
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/users.png);
+                           
+        }
     QRadioButton{
     }
     QRadioButton:hover{
