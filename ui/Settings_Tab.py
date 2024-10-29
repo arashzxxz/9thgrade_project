@@ -9,7 +9,7 @@ from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
 class setting_tab(QWidget):
     def __init__(self):
         super().__init__()
-        #create texts and headers
+        #create all the widgets
         self.customization_header=QLabel("Customization",self)
         self.section_seperator1=QLabel("",self)
         self.notification_header=QLabel("Notification",self)

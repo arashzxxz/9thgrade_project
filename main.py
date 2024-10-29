@@ -3,7 +3,7 @@ import sys
 import random
 import requests
 import os
-from ui import Menu, Settings_Tab,styles
+from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
@@ -39,6 +39,7 @@ class mainw(QMainWindow):
         self.settings_tab=Settings_Tab.setting_tab()
         self.settings_tab.setObjectName("settings_tab")
         self.settings_customization_tab=Settings_Tab.setting_customization_tab()
+        self.log_in_tab=log_in_and_sign_in.Log_in()
         #---------------------------
 
         #connect all of the tabs
@@ -47,7 +48,8 @@ class mainw(QMainWindow):
         self.tabs.addTab(self.content_tab2,"")
         self.tabs.addTab(self.settings_tab,"")
         self.tabs.addTab(self.settings_customization_tab,"")
-        self.tabs.setCurrentIndex(3)
+        self.tabs.addTab(self.log_in_tab,"")
+        self.tabs.setCurrentIndex(4)
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
         #-----------------------
 
