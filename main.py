@@ -24,9 +24,12 @@ class mainw(QMainWindow):
         self.connect_all_buttons()
         #--------------------------------------------
 
-
+    #connect all of the buttons
     def connect_all_buttons(self):
         self.main_menu.connect_buttons(self.tabs)
+        self.settings_tab.connect_buttons(self.tabs)#incomplete
+        self.settings_customization_tab.connect_buttons(self.tabs)
+    #-------------------------
 
 
     def initui(self):
@@ -84,10 +87,12 @@ class mainw(QMainWindow):
         return gui
     #--------
 
-
+    #set the styles
     def set_styles(self):
-        self.settings_tab.setStyleSheet(styles.style_sheets.settings_style)
-        self.settings_customization_tab.setStyleSheet(styles.style_sheets.settings_customaization_tab)
+        self.setStyleSheet(styles.style_sheets.main_style)
+        self.main_menu.setStyleSheet(styles.style_sheets.menu_style)
+        self.main_widget.setStyleSheet(styles.style_sheets.main_style)
+    #-------------
 
 
 def main():

@@ -54,7 +54,7 @@ class setting_tab(QWidget):
         self.main_layout.setContentsMargins(0,0,0,0)
         self.setContentsMargins(0,0,0,0)
         self.setLayout(self.main_layout)
-        self.setStyleSheet(styles.style_sheets.settings_style)
+        self.setStyleSheet(styles.style_sheets.requierd_settings_style)
         #--------
     #create customization layout
     def settings_customization(self):
@@ -123,6 +123,11 @@ class setting_tab(QWidget):
 
         
         return self.settings_data_widget
+    
+    #connecting the buttons
+    def connect_buttons(self,tabs):
+        self.change_theme_button.clicked.connect(lambda : tabs.setCurrentIndex(3))
+    #---------------------
 class setting_customization_tab(QWidget):
     def __init__(self):
         super().__init__()
@@ -184,3 +189,11 @@ class setting_customization_tab(QWidget):
         self.tab1_main_layout.addLayout(self.tab1_grid_layout)
         self.tab1_main_layout.addLayout(self.tab1_button_layout)
         self.setLayout(self.tab1_main_layout)
+        self.setStyleSheet(styles.style_sheets.required_settings_customaization_tab)
+    
+    
+    #connecting the buttons
+    def connect_buttons(self,tabs):
+        self.back_button.clicked.connect(lambda : tabs.setCurrentIndex(2))
+        self.cancel_button.clicked.connect(lambda : tabs.setCurrentIndex(2))
+    #---------------------
