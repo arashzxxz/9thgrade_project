@@ -13,6 +13,7 @@ class mainw(QMainWindow):
         #create main window
         super(mainw,self).__init__()
         self.setWindowTitle('FitLife')
+        self.setWindowIcon(QIcon("C:/Users/r/Contacts/Desktop/9thgrade_project/assets/logo.png"))
         self.Width = 1000
         self.height = int(0.618 * self.Width)
         self.resize(self.Width, self.height)
