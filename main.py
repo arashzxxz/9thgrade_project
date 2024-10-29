@@ -3,16 +3,16 @@ import sys
 import random
 import requests
 import os
-from ui import Menu, Settings_Tab,styles
+from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
-from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
+from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStyleFactory,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase,QStandardItemModel,QStandardItem
 class mainw(QMainWindow):
     def __init__(self):
         #create main window
         super(mainw,self).__init__()
-        self.setWindowTitle('app')
+        self.setWindowTitle('FitLife')
         self.Width = 1000
         self.height = int(0.618 * self.Width)
         self.resize(self.Width, self.height)
@@ -29,6 +29,7 @@ class mainw(QMainWindow):
         self.main_menu.connect_buttons(self.tabs)
         self.settings_tab.connect_buttons(self.tabs)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
+        self.log_in_and_sign_in_tab.connect_buttons(self.tabs)
     #-------------------------
 
 
@@ -39,6 +40,7 @@ class mainw(QMainWindow):
         self.settings_tab=Settings_Tab.setting_tab()
         self.settings_tab.setObjectName("settings_tab")
         self.settings_customization_tab=Settings_Tab.setting_customization_tab()
+        self.log_in_and_sign_in_tab=log_in_and_sign_in.connect_pages()
         #---------------------------
 
         #connect all of the tabs
@@ -47,7 +49,7 @@ class mainw(QMainWindow):
         self.tabs.addTab(self.content_tab2,"")
         self.tabs.addTab(self.settings_tab,"")
         self.tabs.addTab(self.settings_customization_tab,"")
-        self.tabs.setCurrentIndex(3)
+        self.tabs.addTab(self.log_in_and_sign_in_tab,"")
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
         #-----------------------
 
@@ -62,6 +64,7 @@ class mainw(QMainWindow):
         self.main_widget.setLayout(self.main_layout)
         self.setCentralWidget(None)
         self.setCentralWidget(self.main_widget)
+        self.main_menu.home_button.setChecked(True) 
         #---------------------------
 
         #style all of the app
@@ -97,6 +100,7 @@ class mainw(QMainWindow):
 
 def main():
     app=QApplication(sys.argv)
+    app.setStyle(QStyleFactory.create('Fusion'))
     window=mainw()
     window.show()
     sys.exit(app.exec_())
