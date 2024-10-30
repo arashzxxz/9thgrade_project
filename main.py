@@ -101,7 +101,7 @@ class mainw(QMainWindow):
 
 def main():
     app=QApplication(sys.argv)
-
+    QApplication.setStyle(QStyleFactory.create('Fusion'))
     window=mainw()
     window.show()
     sys.exit(app.exec_())

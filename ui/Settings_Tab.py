@@ -28,27 +28,21 @@ class setting_tab(QWidget):
 
         #create layout
         self.sections_layout=QVBoxLayout(self)
-        self.settings_sections_tab=QWidget()
         self.customization_content=self.settings_customization()
         self.notification_content=self.settings_notification()
         self.data_content=self.settings_data()
         self.sections_layout.addWidget(self.customization_header,20)
         self.sections_layout.addWidget(self.section_seperator1,10)
-        self.sections_layout.addWidget(self.customization_content)
+        self.sections_layout.addLayout(self.customization_content)
         self.sections_layout.addWidget(self.notification_header,20)
         self.sections_layout.addWidget(self.section_seperator2,10)
-        self.sections_layout.addWidget(self.notification_content)
+        self.sections_layout.addLayout(self.notification_content)
         self.sections_layout.addWidget(self.data_header,20)
         self.sections_layout.addWidget(self.section_seperator3,10)
-        self.sections_layout.addWidget(self.data_content)
-        self.settings_sections_tab.setLayout(self.sections_layout)
-        self.settings_main_tabs=QTabWidget(self)
-        self.settings_main_tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
-        self.settings_main_tabs.addTab(self.settings_sections_tab,"")
-        self.settings_main_tabs.setCurrentIndex(0)
+        self.sections_layout.addLayout(self.data_content)
         self.main_layout=QVBoxLayout()
         self.scroll_area=QScrollArea(self)
-        self.scroll_area.setWidget(self.settings_main_tabs)
+        self.scroll_area.setLayout(self.sections_layout)
         self.scroll_area.setWidgetResizable(True)
         self.main_layout.addWidget(self.scroll_area)
         self.main_layout.setContentsMargins(0,0,0,0)
@@ -70,7 +64,6 @@ class setting_tab(QWidget):
         #------------------------
 
         #create main widget and main layout
-        self.settings_customization_widget=QWidget(self)
         self.grid=QGridLayout(self)
         self.grid.addWidget(self.font_text,0,0)
         self.grid.addWidget(QLabel("",self),0,1)
@@ -78,11 +71,10 @@ class setting_tab(QWidget):
         self.grid.addWidget(self.select_font_size,0,4)
         self.grid.addWidget(self.change_font_button,0,5,1,2)
         self.grid.addWidget(self.change_theme_button,1,0,1,7)
-        self.settings_customization_widget.setLayout(self.grid)
         #----------------------------------
 
         
-        return self.settings_customization_widget
+        return self.grid
     
     #create notification layout
     def settings_notification(self):
@@ -94,16 +86,15 @@ class setting_tab(QWidget):
         #------------------------
 
         #create main widget and main layout
-        self.settings_notification_widget=QWidget(self)
+        
         self.grid1=QGridLayout(self)
         self.grid1.addWidget(self.change_sending_time_text,0,0,1,2)
         self.grid1.addWidget(self.change_sending_time_button,0,5,1,2)
         self.grid1.addWidget(self.change_sending_time_submit_button,1,0,1,7)
-        self.settings_notification_widget.setLayout(self.grid1)
         #----------------------------------
 
         
-        return self.settings_notification_widget
+        return self.grid1
     
     #create data layout
     def settings_data(self):
@@ -114,20 +105,20 @@ class setting_tab(QWidget):
         #------------------------
 
         #create main widget and main layout
-        self.settings_data_widget=QWidget(self)
+        
         self.grid2=QGridLayout(self)
         self.grid2.addWidget(self.delete_all_users_data,0,0)
         self.grid2.addWidget(self.delete_all_apps_data,0,1)
-        self.settings_data_widget.setLayout(self.grid2)
         #----------------------------------
 
         
-        return self.settings_data_widget
+        return self.grid2
     
     #connecting the buttons
     def connect_buttons(self,tabs):
         self.change_theme_button.clicked.connect(lambda : tabs.setCurrentIndex(3))
     #---------------------
+        
 class setting_customization_tab(QWidget):
     def __init__(self):
         super().__init__()

@@ -50,6 +50,9 @@ class style_sheets(QWidget):
         QPushButton:hover{
         background-color : """+widgets_hoverc+""";
         }
+        QWidget{
+        color: Black;
+        }
     """
     menu_style="""
         QRadioButton#menub::indicator::unchecked{
