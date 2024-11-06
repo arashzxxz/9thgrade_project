@@ -6,6 +6,7 @@ import os
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
+from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStyleFactory,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase,QStandardItemModel,QStandardItem
 class mainw(QMainWindow):
@@ -101,7 +102,7 @@ class mainw(QMainWindow):
 
 def main():
     app=QApplication(sys.argv)
-    QApplication.setStyle(QStyleFactory.create('Fusion'))
+    
     window=mainw()
     window.show()
     sys.exit(app.exec_())
