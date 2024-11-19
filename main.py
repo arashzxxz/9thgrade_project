@@ -3,6 +3,7 @@ import sys
 import random
 import requests
 import os
+from users import sign_in,log_in
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
@@ -20,18 +21,40 @@ class mainw(QMainWindow):
         self.resize(self.Width, self.height)
         #------------------
 
+        #call the gdb function and setup the data structure
+        self.get_data_base()
+        query=QSqlQuery()
+        query.exec_(""" 
+        CREATE TABLE IF NOT EXISTS data(
+            Username TEXT,
+            Password TEXT
+        )
+        """)
+        #---------------------------------------------------
+
 
         #create tabs and menus and connecting buttons
         self.initui()
         self.connect_all_buttons()
         #--------------------------------------------
 
+
+    #open the data base
+    def get_data_base(self):
+        self.database=QSqlDatabase.addDatabase("QSQLITE")
+        self.database.setDatabaseName("data.db")
+        if not self.database.open():
+            QMessageBox.critical(None,"Error","Could not open your data base")
+            sys.exit(1)
+    #------------------
+        
+
     #connect all of the buttons
     def connect_all_buttons(self):
         self.main_menu.connect_buttons(self.tabs)
         self.settings_tab.connect_buttons(self.tabs)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
-        self.log_in_and_sign_in_tab.connect_buttons(self.tabs)
+        self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
     #-------------------------
 
 
@@ -102,7 +125,6 @@ class mainw(QMainWindow):
 
 def main():
     app=QApplication(sys.argv)
-    
     window=mainw()
     window.show()
     sys.exit(app.exec_())

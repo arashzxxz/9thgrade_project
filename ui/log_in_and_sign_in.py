@@ -1,5 +1,6 @@
 
 from ui import styles
+from users import sign_in,log_in
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont
@@ -107,14 +108,15 @@ class connect_pages(QWidget):
         #---------------
 
         #connect all buttons
-    def connect_buttons(self,tabs):
+    def connect_buttons(self,tabs,database):
         self.choose_tab1.clicked.connect(lambda : self.main_widget.setCurrentIndex(0))
         self.choose_tab2.clicked.connect(lambda : self.main_widget.setCurrentIndex(1))
         self.sign_in_tab.sign_in_button.clicked.connect(self.gather_sign_in_info)
+        self.database=database
         #-------------------
 
     #get entrys text
-    def gather_sign_in_info(self):
+    def gather_sign_in_info(self,database):
         self.sign_in_tab.show_error_username.setText("")
         self.sign_in_tab.show_error_password.setText("")
         self.sign_in_tab.show_error_confirm_password.setText("")
@@ -128,8 +130,8 @@ class connect_pages(QWidget):
         if not confirm_password:
             self.sign_in_tab.show_error_confirm_password.setText("Please confirm the password")
         if password!=confirm_password:
-            pass
+            self.sign_in_tab.show_error_confirm_password.setText("The passwords dont match each other")
         else :
-            pass
+            exit_code=sign_in.sign_in_backend(user,password,self.database)
 
     #--------------
