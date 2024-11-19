@@ -14,10 +14,20 @@ def sign_in_backend(username,password,database):
 
 #check if user is already created
     query1=QSqlQuery()
-    query1.prepare("""SELECT * FROM data 
-                 WHERE Username = ?""")
+    query1.prepare("""SELECT * FROM data WHERE Username = ? AND Password = ?""")
+    query1.addBindValue(username)
     query1.addBindValue(h_password)
     query1.exec_()
-    print(query1.value(0))
+    if query1.next():
+        return 409
+    else :
+        # create user
+        query2=QSqlQuery()
+        query2.prepare("""INSERT INTO data (Username, Password)VALUES (?, ?)""")
+        query2.addBindValue(username)
+        query2.addBindValue(h_password)
+        query2.exec_()
+        return 0
+        #-----------
 #--------------------------------
     

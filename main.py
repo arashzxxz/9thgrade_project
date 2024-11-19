@@ -117,9 +117,9 @@ class mainw(QMainWindow):
 
     #set the styles
     def set_styles(self):
-        self.setStyleSheet(styles.style_sheets.main_style)
+        # self.setStyleSheet(styles.style_sheets.main_style)
         self.main_menu.setStyleSheet(styles.style_sheets.menu_style)
-        self.main_widget.setStyleSheet(styles.style_sheets.main_style)
+        # self.main_widget.setStyleSheet(styles.style_sheets.main_style)
     #-------------
 
 
