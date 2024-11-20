@@ -19,7 +19,7 @@ def sign_in_backend(username,password,database):
     query1.addBindValue(h_password)
     query1.exec_()
     if query1.next():
-        return 409
+        return "409"
     else :
         # create user
         query2=QSqlQuery()
@@ -27,7 +27,7 @@ def sign_in_backend(username,password,database):
         query2.addBindValue(username)
         query2.addBindValue(h_password)
         query2.exec_()
-        return 0
+        return "0"
         #-----------
 #--------------------------------
     
