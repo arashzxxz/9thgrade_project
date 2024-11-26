@@ -3,7 +3,7 @@ import sys
 import random
 import requests
 import os
-from users import sign_in,log_in,current_user
+from users import current_user
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize

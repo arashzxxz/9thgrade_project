@@ -1,7 +1,7 @@
 
 from ui import styles
 import re
-from users import sign_in,log_in
+from users import sign_in,log_in,current_user
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont
@@ -93,8 +93,29 @@ class Sign_in(QWidget):
         self.main_layout.setContentsMargins(150,50,150,0)
         self.setLayout(self.main_layout)
         #------------------
+    
+class loged_in_tab(QWidget):
+    def __init__(self):
+        super().__init__()
+        # create all the widgets
+        self.username=QLabel(current_user.logged_in_user.username,self)
+        self.username.setAlignment(Qt.AlignTop | Qt.AlignRight)
+        self.log_out_button=QPushButton("Log out",self)
+        self.delete_account_button=QPushButton("Delete account",self)
+        #----------------------
 
-
+        #create the layout
+        self.main_layout=QVBoxLayout(self)
+        self.info_layout=QVBoxLayout(self)
+        self.button_layout=QHBoxLayout(self)
+        self.info_layout.addWidget(self.username)
+        self.button_layout.addWidget(self.delete_account_button)
+        self.button_layout.addWidget(self.log_out_button)
+        self.main_layout.addLayout(self.info_layout)
+        self.main_layout.addLayout(self.button_layout)
+        self.main_layout.setContentsMargins(15,5,15,0)
+        self.setLayout(self.main_layout)
+        #------------------
 
 class connect_pages(QWidget):
     def __init__(self):
@@ -107,6 +128,7 @@ class connect_pages(QWidget):
         self.main_widget=QStackedWidget(self)
         self.log_in_tab=Log_in()
         self.sign_in_tab=Sign_in()
+        self.loged_in_tab=loged_in_tab()
         self.choose_tab1=QPushButton("Log ing",self)
         self.choose_tab2=QPushButton("Sign in",self)
         #-----------------------
@@ -114,6 +136,7 @@ class connect_pages(QWidget):
         # create layouts
         self.main_widget.addWidget(self.log_in_tab)
         self.main_widget.addWidget(self.sign_in_tab)
+        self.main_widget.addWidget(self.loged_in_tab)
         self.main_layout=QVBoxLayout(self)
         self.choose_tab_layout=QVBoxLayout(self)
         self.choose_tab_layout.addWidget(self.choose_tab1)
@@ -190,7 +213,7 @@ class connect_pages(QWidget):
             if exit_code=="409":
                 self.sign_in_tab.show_error_overall.setText(f"user already exists , error code : {exit_code}")
             if exit_code=="0":
-                self.log_in_tab.show_error_overall.setText(f"Account successfully created")
+                self.sign_in_tab.show_error_overall.setText(f"Account successfully created")
 
     #--------------------------------
 
@@ -212,12 +235,8 @@ class connect_pages(QWidget):
         if self.justwhitespace_pattern.findall(password) :
             self.log_in_tab.show_error_password.setText("Please enter a password")
         else :
-            exit_code=log_in.log_in_backend(user,password,self.database)
+            exit_code=log_in.log_in_backend(user,password,self.database,self.main_widget,self.loged_in_tab)
             if exit_code=="404":
                 self.log_in_tab.show_error_overall.setText(f"user does not exist , error code : {exit_code}")
-            if exit_code=="255,u and p dont match":
-                self.log_in_tab.show_error_overall.setText(f"Username and password dont match each other")
-            if exit_code=="0":
-                self.log_in_tab.show_error_overall.setText(f"Successfully logged in")
 
     #--------------------------------
