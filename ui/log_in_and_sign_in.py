@@ -1,7 +1,7 @@
 
 from ui import styles
 import re
-from users import sign_in,log_in,current_user
+from users import sign_in,log_in,current_user,delete_account
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont
@@ -94,7 +94,7 @@ class Sign_in(QWidget):
         self.setLayout(self.main_layout)
         #------------------
     
-class loged_in_tab(QWidget):
+class logged_in_tab(QWidget):
     def __init__(self):
         super().__init__()
         # create all the widgets
@@ -117,6 +117,27 @@ class loged_in_tab(QWidget):
         self.setLayout(self.main_layout)
         #------------------
 
+class delete_tab(QWidget):
+    def __init__(self):
+        super().__init__()
+        # create all the widgets
+        self.text=QLabel("Are you sure ?",self)
+        self.text.setAlignment(Qt.AlignCenter)
+        self.delete_button=QPushButton("Delete",self)
+        self.cancel_button=QPushButton("Cancel",self)
+        #----------------------
+
+        #create the layout
+        self.main_layout=QVBoxLayout(self)
+        self.button_layout=QHBoxLayout(self)
+        self.button_layout.addWidget(self.delete_button)
+        self.button_layout.addWidget(self.cancel_button)
+        self.main_layout.addWidget(self.text)
+        self.main_layout.addLayout(self.button_layout)
+        self.main_layout.setContentsMargins(15,5,15,0)
+        self.setLayout(self.main_layout)
+        #------------------
+
 class connect_pages(QWidget):
     def __init__(self):
         super().__init__()
@@ -128,8 +149,9 @@ class connect_pages(QWidget):
         self.main_widget=QStackedWidget(self)
         self.log_in_tab=Log_in()
         self.sign_in_tab=Sign_in()
-        self.loged_in_tab=loged_in_tab()
-        self.choose_tab1=QPushButton("Log ing",self)
+        self.loged_in_tab=logged_in_tab()
+        self.delete_confirmation_tab=delete_tab()
+        self.choose_tab1=QPushButton("Log in",self)
         self.choose_tab2=QPushButton("Sign in",self)
         #-----------------------
 
@@ -137,6 +159,7 @@ class connect_pages(QWidget):
         self.main_widget.addWidget(self.log_in_tab)
         self.main_widget.addWidget(self.sign_in_tab)
         self.main_widget.addWidget(self.loged_in_tab)
+        self.main_widget.addWidget(self.delete_confirmation_tab)
         self.main_layout=QVBoxLayout(self)
         self.choose_tab_layout=QVBoxLayout(self)
         self.choose_tab_layout.addWidget(self.choose_tab1)
@@ -159,6 +182,8 @@ class connect_pages(QWidget):
         self.database=database
         self.sign_in_tab.sign_in_button.clicked.connect(self.gather_sign_in_info)
         self.log_in_tab.log_in_button.clicked.connect(self.gather_log_in_info)
+        self.loged_in_tab.delete_account_button.clicked.connect(self.delete_account_confirmation)
+        self.loged_in_tab.log_out_button.clicked.connect(self.log_out)
     #-------------------
 
 
@@ -238,5 +263,43 @@ class connect_pages(QWidget):
             exit_code=log_in.log_in_backend(user,password,self.database,self.main_widget,self.loged_in_tab)
             if exit_code=="404":
                 self.log_in_tab.show_error_overall.setText(f"user does not exist , error code : {exit_code}")
+            if exit_code=="0":
+                self.main_widget.setCurrentIndex(2)
+                self.choose_tab1.hide()
+                self.choose_tab2.hide()
 
     #--------------------------------
+                
+    #log out function
+    def log_out(self):
+        current_user.logged_in_user.password="have not logged in yet"
+        current_user.logged_in_user.username="have not logged in yet"
+        current_user.logged_in_user.log_in_status=False
+        self.main_widget.setCurrentIndex(0)
+        self.choose_tab1.show()
+        self.choose_tab2.show()
+    #----------------
+                
+    # confirm the deleting of account
+    def delete_account_confirmation(self):
+        self.last_tab=self.main_widget.currentIndex()
+        self.main_widget.setCurrentIndex(3)
+        self.delete_confirmation_tab.cancel_button.clicked.connect(self.cancel_account_deletation)
+        self.delete_confirmation_tab.delete_button.clicked.connect(self.call_delete_function)
+    #--------------------------------
+    
+    # cancel the account deletation
+    def cancel_account_deletation(self):
+        self.choose_tab1.show()
+        self.choose_tab2.show()
+        self.main_widget.setCurrentIndex(self.last_tab)
+    #------------------------------------------------------       
+ 
+    # call the delete function from the delete account file
+    def call_delete_function(self):
+        exit_code=delete_account.delete_account_backend(self.database)
+        if exit_code=="0":
+            self.choose_tab1.show()
+            self.choose_tab2.show()
+            self.main_widget.setCurrentIndex(0)
+    #------------------------------------------------------

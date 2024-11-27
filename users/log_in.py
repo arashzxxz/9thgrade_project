@@ -28,7 +28,6 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         current_user.logged_in_user.username=username
         current_user.logged_in_user.log_in_status=True
         logged_in_tab.username.setText(current_user.logged_in_user.username)
-        tabs.setCurrentIndex(2)
         return "0"
         #-----------
 #--------------------------------
