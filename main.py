@@ -5,6 +5,7 @@ import requests
 import os
 from users import current_user
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
+from ui.main_tab import calendar_widget,main_widget
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
@@ -60,7 +61,7 @@ class mainw(QMainWindow):
 
     def initui(self):
         #create all of the main tabs
-        self.content_tab1=self.createtab1()
+        self.content_tab1=main_widget.Main_widget()
         self.content_tab2=self.createtab2()
         self.settings_tab=Settings_Tab.setting_tab()
         self.settings_tab.setObjectName("settings_tab")
@@ -95,16 +96,6 @@ class mainw(QMainWindow):
         #style all of the app
         self.set_styles()
         #-------------------
-    
-
-    #test tab
-    def createtab1(self):
-        vb1=QVBoxLayout()
-        vb1.addWidget(QPushButton("1",self))
-        gui=QWidget()
-        gui.setLayout(vb1)
-        return gui
-    #-------
 
     #test tab
     def createtab2(self):

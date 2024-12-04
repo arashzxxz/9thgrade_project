@@ -290,8 +290,6 @@ class connect_pages(QWidget):
     
     # cancel the account deletation
     def cancel_account_deletation(self):
-        self.choose_tab1.show()
-        self.choose_tab2.show()
         self.main_widget.setCurrentIndex(self.last_tab)
     #------------------------------------------------------       
  
