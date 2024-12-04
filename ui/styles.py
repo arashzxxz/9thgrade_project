@@ -57,13 +57,13 @@ class style_sheets(QWidget):
     menu_style="""
         QRadioButton#menub::indicator::unchecked{
                            background-color: transparent;
-                           border-radius: 0px ;
+                           border-radius: 0px;
                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png);
                            
         }
         QRadioButton#menub::indicator::checked{
                            background-color: """+selected_tabc+""";
-                           border-radius: 0px ;
+                           border-radius: 0px;
                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png);
                            
         }
