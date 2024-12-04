@@ -15,9 +15,16 @@ class Main_widget(QWidget):
 
         #add the widgets
         self.calendar_widget=calendar_widget.Calendar_widget()
-        self.current_day_content=current_day_content.Current_day_content_widget()
+        self.current_day_content1=current_day_content.Current_day_food_widget()
+        self.current_day_content2=current_day_content.Current_day_exercise_widget()
+        self.date=QLabel("Dec 4, 2024",self)
+        self.date.setStyleSheet("font-size: 20px")
+        self.date.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.current_day_content.addWidget(self.date,10)
+        self.current_day_content.addWidget(self.current_day_content1,60)
+        self.current_day_content.addWidget(self.current_day_content2,30)
         self.main_layout.addWidget(self.calendar_widget,30)
-        self.main_layout.addWidget(self.current_day_content,70)
+        self.main_layout.addLayout(self.current_day_content,70)
         #---------------
 
         #set the layout

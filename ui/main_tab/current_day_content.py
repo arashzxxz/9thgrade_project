@@ -3,9 +3,29 @@ from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QS
 from PyQt5.QtCore import Qt, QDate  
 import main
 from ui.main_tab import calendar_widget,current_day_content
-    
 
-class Current_day_content_widget(QWidget):  
+class Current_day_exercise_widget(QWidget):  
+    def __init__(self):  
+        super().__init__()  
+        # create the layouts
+        self.main_layout=QHBoxLayout()
+        #-------------------
+
+        #add the widgets
+        self.expand_button=QPushButton("",self)
+        self.exercise_status_text=QLabel("20 minutes of exersice needed",self)
+        self.exercise_status_icon=QLabel("",self)
+        self.expand_button.setStyleSheet("background-color: transparent;border-radius: 0px ;image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/expand.png)")
+        #---------------
+
+        #set the layouts contents
+        self.main_layout.addWidget(self.exercise_status_icon,30)
+        self.main_layout.addWidget(self.exercise_status_text,30)
+        self.main_layout.addWidget(self.expand_button,20)
+        self.setLayout(self.main_layout)
+        #--------------
+
+class Current_day_food_widget(QWidget):  
     def __init__(self):  
         super().__init__()  
         # create the layouts
@@ -22,6 +42,8 @@ class Current_day_content_widget(QWidget):
         self.eaten_calories_text=QLabel("Eaten calories   :",self)
         self.eaten_calories_entry=QLineEdit(self)
         self.submit_button=QPushButton("Submit",self)
+        self.expand_button=QPushButton("",self)
+        self.expand_button.setStyleSheet("background-color: transparent;border-radius: 0px ;image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/expand.png)")
         #---------------
 
         #set the layouts contents
@@ -32,6 +54,7 @@ class Current_day_content_widget(QWidget):
         self.content_layout.addLayout(self.needed_calories_text_layout)
         self.content_layout.addLayout(self.eaten_calories_text_layout)
         self.content_layout.addWidget(self.submit_button)
-        self.main_layout.addLayout(self.content_layout)
+        self.main_layout.addLayout(self.content_layout,60)
+        self.main_layout.addWidget(self.expand_button,20)
         self.setLayout(self.main_layout)
         #--------------
