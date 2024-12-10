@@ -30,4 +30,9 @@ class Main_widget(QWidget):
         #set the layout
         self.setLayout(self.main_layout)
         #--------------
+
+    #connect all the buttons
+    def connect_buttons(self,tabs):
+        self.current_day_content2.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(5))
+    #-----------------------
         
