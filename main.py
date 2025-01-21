@@ -1,10 +1,11 @@
 
 import sys
-import random
 import requests
 import os
 from users import current_user
+from ui.main_tab import exercise_tabs
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
+from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
@@ -55,33 +56,40 @@ class mainw(QMainWindow):
         self.settings_tab.connect_buttons(self.tabs)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
+        self.main_tab.connect_buttons(self.tabs)
+        self.exercise_tab.timer_widget.connect_buttons()
+        self.exercise_tab.connect_buttons()
     #-------------------------
 
 
     def initui(self):
         #create all of the main tabs
-        self.content_tab1=self.createtab1()
+        self.main_tab=main_widget.Main_widget()
         self.content_tab2=self.createtab2()
+        self.exercise_tab=exercise_tabs.Exercise_tab()
         self.settings_tab=Settings_Tab.setting_tab()
         self.settings_tab.setObjectName("settings_tab")
         self.settings_customization_tab=Settings_Tab.setting_customization_tab()
         self.log_in_and_sign_in_tab=log_in_and_sign_in.connect_pages()
+        self.main_tab_log_in_error_tab=log_in_error.Log_in_error_tab()
         #---------------------------
 
         #connect all of the tabs
         self.tabs=QTabWidget()
-        self.tabs.addTab(self.content_tab1,"")
+        self.tabs.addTab(self.main_tab,"")
         self.tabs.addTab(self.content_tab2,"")
         self.tabs.addTab(self.settings_tab,"")
         self.tabs.addTab(self.settings_customization_tab,"")
         self.tabs.addTab(self.log_in_and_sign_in_tab,"")
+        self.tabs.addTab(self.exercise_tab,"")
+        self.tabs.addTab(self.main_tab_log_in_error_tab,"")
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
         #-----------------------
 
 
         #create main layout and menu
         self.main_layout=QHBoxLayout(self)
-        self.main_menu=Menu.menu()
+        self.main_menu=Menu.Menu()
         self.main_layout.addWidget(self.main_menu,0)
         self.main_layout.addWidget(self.tabs,1)
         self.main_layout.setContentsMargins(0,0,0,0)
@@ -95,16 +103,6 @@ class mainw(QMainWindow):
         #style all of the app
         self.set_styles()
         #-------------------
-    
-
-    #test tab
-    def createtab1(self):
-        vb1=QVBoxLayout()
-        vb1.addWidget(QPushButton("1",self))
-        gui=QWidget()
-        gui.setLayout(vb1)
-        return gui
-    #-------
 
     #test tab
     def createtab2(self):

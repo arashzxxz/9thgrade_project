@@ -177,16 +177,21 @@ class connect_pages(QWidget):
         self.sign_in_tab.username_entry.textChanged.connect(lambda : self.sign_in_tab.show_error_username.setText(""))
         self.sign_in_tab.confirm_password_entry.textChanged.connect(lambda : self.sign_in_tab.show_error_overall.setText(""))
         self.sign_in_tab.username_entry.textChanged.connect(lambda : self.sign_in_tab.show_error_overall.setText(""))
-        self.choose_tab1.clicked.connect(lambda : self.main_widget.setCurrentIndex(0))
-        self.choose_tab2.clicked.connect(lambda : self.main_widget.setCurrentIndex(1))
+        self.choose_tab1.clicked.connect(self.choose_tab1_f)
+        self.choose_tab2.clicked.connect(self.choose_tab2_f)
         self.database=database
         self.sign_in_tab.sign_in_button.clicked.connect(self.gather_sign_in_info)
         self.log_in_tab.log_in_button.clicked.connect(self.gather_log_in_info)
         self.loged_in_tab.delete_account_button.clicked.connect(self.delete_account_confirmation)
         self.loged_in_tab.log_out_button.clicked.connect(self.log_out)
+    def choose_tab1_f(self):
+        self.main_widget.setCurrentIndex(0)
+        self.clear_entry()
+    def choose_tab2_f(self):
+        self.main_widget.setCurrentIndex(1)
+        self.clear_entry()
     #-------------------
-
-
+        
     # show the password security status
     def change_password_entry_error_and_security(self):
         self.password_security=0
@@ -265,6 +270,7 @@ class connect_pages(QWidget):
                 self.log_in_tab.show_error_overall.setText(f"user does not exist , error code : {exit_code}")
             if exit_code=="0":
                 self.main_widget.setCurrentIndex(2)
+                self.clear_entry()
                 self.choose_tab1.hide()
                 self.choose_tab2.hide()
 
@@ -276,6 +282,7 @@ class connect_pages(QWidget):
         current_user.logged_in_user.username="have not logged in yet"
         current_user.logged_in_user.log_in_status=False
         self.main_widget.setCurrentIndex(0)
+        self.clear_entry()
         self.choose_tab1.show()
         self.choose_tab2.show()
     #----------------
@@ -284,14 +291,14 @@ class connect_pages(QWidget):
     def delete_account_confirmation(self):
         self.last_tab=self.main_widget.currentIndex()
         self.main_widget.setCurrentIndex(3)
+        self.clear_entry()
+        self.clear_entry()
         self.delete_confirmation_tab.cancel_button.clicked.connect(self.cancel_account_deletation)
         self.delete_confirmation_tab.delete_button.clicked.connect(self.call_delete_function)
     #--------------------------------
     
     # cancel the account deletation
     def cancel_account_deletation(self):
-        self.choose_tab1.show()
-        self.choose_tab2.show()
         self.main_widget.setCurrentIndex(self.last_tab)
     #------------------------------------------------------       
  
@@ -302,4 +309,13 @@ class connect_pages(QWidget):
             self.choose_tab1.show()
             self.choose_tab2.show()
             self.main_widget.setCurrentIndex(0)
+            self.clear_entry()
     #------------------------------------------------------
+    
+    # clear all of the entrys
+    def clear_entry(self):
+        self.log_in_tab.password_entry.clear()
+        self.log_in_tab.username_entry.clear()
+        self.sign_in_tab.password_entry.clear()
+        self.sign_in_tab.username_entry.clear()
+        self.sign_in_tab.confirm_password_entry.clear()
