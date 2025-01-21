@@ -8,7 +8,6 @@ from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
-from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStyleFactory,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase,QStandardItemModel,QStandardItem
 class mainw(QMainWindow):
@@ -24,13 +23,7 @@ class mainw(QMainWindow):
 
         #call the gdb function and setup the data structure
         self.get_data_base()
-        query=QSqlQuery()
-        query.exec_(""" 
-        CREATE TABLE IF NOT EXISTS data(
-            Username TEXT,
-            Password TEXT
-        )
-        """)
+        self.create_db_tables()
         #---------------------------------------------------
 
 
@@ -39,15 +32,47 @@ class mainw(QMainWindow):
         self.connect_all_buttons()
         #--------------------------------------------
 
+    # Create database tables  
+    def create_db_tables(self):  
+        query_user = '''  
+            CREATE TABLE IF NOT EXISTS User (  
+                id INTEGER PRIMARY KEY AUTOINCREMENT,  
+                username VARCHAR NOT NULL,  
+                password VARCHAR,  
+                data_id INTEGER,  
+                PRIMARY KEY(id),  
+                FOREIGN KEY (data_id) REFERENCES Data(id)  
+                ON UPDATE NO ACTION ON DELETE NO ACTION  
+            );  
+        '''  
 
-    #open the data base
-    def get_data_base(self):
-        self.database=QSqlDatabase.addDatabase("QSQLITE")
-        self.database.setDatabaseName("data.db")
-        if not self.database.open():
-            QMessageBox.critical(None,"Error","Could not open your data base")
-            sys.exit(1)
-    #------------------
+        query_data = '''  
+            CREATE TABLE IF NOT EXISTS Data (  
+                id INTEGER NOT NULL UNIQUE,  
+                weight NUMERIC,  
+                height INTEGER,  
+                bmi NUMERIC,  
+                PRIMARY KEY(id)  
+            );  
+        '''   
+
+        query = QSqlQuery()  
+        if not query.exec_(query_user):  
+            QMessageBox.critical(None, "Error", "Could not create User table: " + query.lastError().text())  
+        if not query.exec_(query_data):  
+            QMessageBox.critical(None, "Error", "Could not create Data table: " + query.lastError().text())  
+
+    #----------------
+
+
+    #open the data bases
+    def get_data_base(self):  
+        self.database = QSqlDatabase.addDatabase("QSQLITE")
+        self.database.setDatabaseName("database.db")                    
+        if not self.database.open():  
+            QMessageBox.critical(None, "Error", "Could not open the database: " + self.database.lastError().text())  
+            sys.exit(1)  
+        #------------------
         
 
     #connect all of the buttons

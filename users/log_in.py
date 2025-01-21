@@ -15,7 +15,7 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
 #check if user exists
 
     query1=QSqlQuery()
-    query1.prepare("""SELECT * FROM data WHERE Username = ? AND Password = ?""")
+    query1.prepare("""SELECT * FROM User WHERE username = ? AND password = ?""")
     query1.addBindValue(username)
     query1.addBindValue(h_password)
     query1.exec_()
