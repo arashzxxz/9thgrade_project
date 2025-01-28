@@ -45,9 +45,9 @@ def calculate_ideal_weight(age,gender,height,bmi):
     ]  
     if age<=19:
         if gender=="male":
-            ideal_weight=2.27*age+10.5+(0.5*(height-males_avg[age]))
+            ideal_weight=2.27*age+10.5+(0.5*(height-males_avg[age-1]))
         if gender=="female":
-            ideal_weight=2.27*age+11+(0.5*(height-females_avg[age]))
+            ideal_weight=2.27*age+11+(0.5*(height-females_avg[age-1]))
     else:
         ideal_weight=bmi*(height/100)*(height/100)
     return round(ideal_weight,1)

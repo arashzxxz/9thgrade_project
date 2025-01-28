@@ -54,7 +54,7 @@ class Menu(QWidget):
     # Home button clicked  
     def home_button_clicked_function(self, tabs):  
         if current_user.logged_in_user.log_in_status == True:  
-            tabs.setCurrentIndex(0)  
+            tabs.setCurrentIndex(7)  
         if current_user.logged_in_user.log_in_status == False:   
             tabs.setCurrentIndex(6)  
     #--------------------
