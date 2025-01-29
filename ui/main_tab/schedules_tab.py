@@ -100,7 +100,8 @@ class SchedulesTab(QMainWindow):
 
     def handle_button_click(self, button):  
         if self.delete_radio_button.isChecked():  
-            self.schedules_buttons_layout.removeWidget(button)  
+            self.schedules_buttons_layout.removeWidget(button) 
+            button.deleteLater()
 
     def connect_buttons(self,tabs):
         self.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(0))

@@ -39,19 +39,20 @@ class mainw(QMainWindow):
                 id INTEGER PRIMARY KEY AUTOINCREMENT,  
                 username VARCHAR NOT NULL,  
                 password VARCHAR,  
-                data_id INTEGER,  
-                PRIMARY KEY(id),  
+                data_id INTEGER, 
                 FOREIGN KEY (data_id) REFERENCES Data(id)  
                 ON UPDATE NO ACTION ON DELETE NO ACTION  
             );  
         '''  
+
 
         query_data = '''  
             CREATE TABLE IF NOT EXISTS Data (  
                 id INTEGER NOT NULL UNIQUE,  
                 weight NUMERIC,  
                 height INTEGER,  
-                bmi NUMERIC,  
+                age NUMERIC,  
+                gender VARCHAR,
                 PRIMARY KEY(id)  
             );  
         '''   
@@ -68,7 +69,7 @@ class mainw(QMainWindow):
     #open the data bases
     def get_data_base(self):  
         self.database = QSqlDatabase.addDatabase("QSQLITE")
-        self.database.setDatabaseName("database.db")                    
+        self.database.setDatabaseName("Database.db")                    
         if not self.database.open():  
             QMessageBox.critical(None, "Error", "Could not open the database: " + self.database.lastError().text())  
             sys.exit(1)  
@@ -112,7 +113,7 @@ class mainw(QMainWindow):
         self.tabs.addTab(self.main_tab_log_in_error_tab,"")
         self.tabs.addTab(self.main_tab_schedules,"")
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
-        self.tabs.setCurrentIndex(7)
+        self.tabs.setCurrentIndex(6)
         #-----------------------
 
 

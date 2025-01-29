@@ -2,6 +2,7 @@
 import sys
 import main
 import hashlib
+import random as rd
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtGui import QFontDatabase,QStandardItemModel,QStandardItem
@@ -11,6 +12,22 @@ def sign_in_backend(username,password,database):
     h.update(password.encode())
     h_password=h.hexdigest()
 #------------------
+
+#create and check the data_id
+    def create_and_check_data_id():
+        temporary_id=rd.randint(0,int(1e6))
+        h=hashlib.new("SHA256")
+        h.update(str(temporary_id).encode())
+        h_temporary_id=h.hexdigest()
+        check_query=QSqlQuery()
+        check_query.prepare("""SELECT * FROM Data WHERE id = ?""")
+        check_query.addBindValue(h_temporary_id)
+        check_query.exec_()
+        if check_query.next():
+            create_and_check_data_id()
+        else :
+            return temporary_id
+#---------------------------
 
 #check if user is already created
     query1=QSqlQuery()
@@ -22,11 +39,22 @@ def sign_in_backend(username,password,database):
         return "409"
     else :
         # create user
+        data_id=create_and_check_data_id()
         query2=QSqlQuery()
-        query2.prepare("""INSERT INTO User (username, password)VALUES (?, ?)""")
+        query2.prepare("""INSERT INTO User (username, password, data_id)VALUES (?, ?, ?)""")
         query2.addBindValue(username)
         query2.addBindValue(h_password)
+        query2.addBindValue(data_id)
         query2.exec_()
+        query4=QSqlQuery()
+        query4.prepare("""INSERT INTO Data (id, weight, height, age, gender)VALUES (?, ?, ?, ?, ?)""")
+        query4.addBindValue(data_id)
+        query4.addBindValue("?")
+        query4.addBindValue("?")
+        query4.addBindValue("?")
+        query4.addBindValue("?")
+
+        query4.exec_()
         return "0"
         #-----------
 #--------------------------------
