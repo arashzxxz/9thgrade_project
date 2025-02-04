@@ -25,6 +25,7 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         # get the users info
         h=hashlib.new("SHA256")
         h.update(str(query1.value(3)).encode())
+        data_id_wh=str(query1.value(3))
         data_id=h.hexdigest()
         data_query=QSqlQuery()
         data_query.prepare("""SELECT * FROM Data WHERE id = ?""")
@@ -38,6 +39,7 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         current_user.logged_in_user.height=data_query.value(2)
         current_user.logged_in_user.age=data_query.value(3)
         current_user.logged_in_user.gender=data_query.value(4)
+        current_user.logged_in_user.data_id_wh=data_id_wh
         logged_in_tab.username.setText(current_user.logged_in_user.username)
         logged_in_tab.weight.setText(current_user.logged_in_user.weight)
         logged_in_tab.height1.setText(current_user.logged_in_user.height)

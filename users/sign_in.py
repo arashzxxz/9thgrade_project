@@ -46,15 +46,7 @@ def sign_in_backend(username,password,database):
         query2.addBindValue(h_password)
         query2.addBindValue(data_id)
         query2.exec_()
-        query4=QSqlQuery()
-        query4.prepare("""INSERT INTO Data (id, weight, height, age, gender)VALUES (?, ?, ?, ?, ?)""")
-        query4.addBindValue(data_id)
-        query4.addBindValue("?")
-        query4.addBindValue("?")
-        query4.addBindValue("?")
-        query4.addBindValue("?")
-
-        query4.exec_()
+        
         return "0"
         #-----------
 #--------------------------------

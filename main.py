@@ -3,7 +3,7 @@ import sys
 import requests
 import os
 from users import current_user
-from ui.main_tab import exercise_tabs,schedules_tab
+from ui.main_tab import exercise_tabs,schedules_tab,food_suggestion
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
 from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
@@ -53,6 +53,11 @@ class mainw(QMainWindow):
                 height INTEGER,  
                 age NUMERIC,  
                 gender VARCHAR,
+                days INTEGER,
+                start_date INTEGER,
+                end_date INTEGER,
+                data TEXT,
+                number INTEGER,
                 PRIMARY KEY(id)  
             );  
         '''   
@@ -84,8 +89,9 @@ class mainw(QMainWindow):
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
         self.main_tab.connect_buttons(self.tabs)
         self.exercise_tab.timer_widget.connect_buttons()
-        self.exercise_tab.connect_buttons()
+        self.exercise_tab.connect_buttons(self.tabs)
         self.main_tab_schedules.connect_buttons(self.tabs)
+        self.food_suggestion_tab.connect_buttons(self.tabs)
     #-------------------------
 
 
@@ -93,8 +99,10 @@ class mainw(QMainWindow):
         #create all of the main tabs
         self.main_tab=main_widget.Main_widget()
         self.main_tab_schedules=schedules_tab.SchedulesTab()
+        self.main_tab_schedules.get_database(database=self.database)
         self.content_tab2=self.createtab2()
         self.exercise_tab=exercise_tabs.Exercise_tab()
+        self.food_suggestion_tab=food_suggestion.Food_suggestions()
         self.settings_tab=Settings_Tab.setting_tab()
         self.settings_tab.setObjectName("settings_tab")
         self.settings_customization_tab=Settings_Tab.setting_customization_tab()
@@ -112,6 +120,7 @@ class mainw(QMainWindow):
         self.tabs.addTab(self.exercise_tab,"")
         self.tabs.addTab(self.main_tab_log_in_error_tab,"")
         self.tabs.addTab(self.main_tab_schedules,"")
+        self.tabs.addTab(self.food_suggestion_tab,"")
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
         self.tabs.setCurrentIndex(6)
         #-----------------------
