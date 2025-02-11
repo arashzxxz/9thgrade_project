@@ -36,12 +36,11 @@ class mainw(QMainWindow):
     def create_db_tables(self):  
         query_user = '''  
             CREATE TABLE IF NOT EXISTS User (  
-                id INTEGER PRIMARY KEY AUTOINCREMENT,  
+                user_id INTEGER PRIMARY KEY,  
                 username VARCHAR NOT NULL,  
                 password VARCHAR,  
-                data_id INTEGER, 
-                FOREIGN KEY (data_id) REFERENCES Data(id)  
-                ON UPDATE NO ACTION ON DELETE NO ACTION  
+                FOREIGN KEY (user_id) REFERENCES Data(id)  
+                ON UPDATE NO ACTION ON DELETE CASCADE  
             );  
         '''  
 
@@ -53,10 +52,10 @@ class mainw(QMainWindow):
                 height INTEGER,  
                 age NUMERIC,  
                 gender VARCHAR,
-                days INTEGER,
+                days TEXT,
                 start_date INTEGER,
                 end_date INTEGER,
-                data TEXT,
+                data BLOB,
                 number INTEGER,
                 PRIMARY KEY(id)  
             );  
@@ -84,7 +83,7 @@ class mainw(QMainWindow):
     #connect all of the buttons
     def connect_all_buttons(self):
         self.main_menu.connect_buttons(self.tabs)
-        self.settings_tab.connect_buttons(self.tabs)#incomplete
+        self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
         self.main_tab.connect_buttons(self.tabs)

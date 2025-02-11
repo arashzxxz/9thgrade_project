@@ -114,9 +114,18 @@ class setting_tab(QWidget):
         
         return self.grid2
     
+    
+    def delete_all_users(self):
+        query1=QSqlQuery()
+        query1.prepare("""DELETE * FROM User """)
+        query1.exec_()
+
+
     #connecting the buttons
-    def connect_buttons(self,tabs):
+    def connect_buttons(self,tabs,database):
         self.change_theme_button.clicked.connect(lambda : tabs.setCurrentIndex(3))
+        self.database=database
+        self.delete_all_users_data.clicked.connect(self.delete_all_users)
     #---------------------
         
 class setting_customization_tab(QWidget):

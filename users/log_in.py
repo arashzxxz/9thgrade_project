@@ -39,7 +39,7 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         current_user.logged_in_user.height=data_query.value(2)
         current_user.logged_in_user.age=data_query.value(3)
         current_user.logged_in_user.gender=data_query.value(4)
-        current_user.logged_in_user.data_id_wh=data_id_wh
+        current_user.logged_in_user.data_id=data_id_wh
         logged_in_tab.username.setText(current_user.logged_in_user.username)
         logged_in_tab.weight.setText(current_user.logged_in_user.weight)
         logged_in_tab.height1.setText(current_user.logged_in_user.height)

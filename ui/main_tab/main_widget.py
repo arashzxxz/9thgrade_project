@@ -1,4 +1,5 @@
-import sys  
+import sys 
+import datetime 
 from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStyleFactory,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtCore import Qt, QDate  
 import main
@@ -21,6 +22,7 @@ class Main_widget(QWidget):
         self.date=QLabel("Dec 4, 2024",self)
         self.date.setStyleSheet("font-size: 20px")
         self.date.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.date.setText(str(datetime.date.today()))
         self.backbutton=QPushButton("",self)
         self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png)")
         self.top_buttons_layout.addWidget(self.backbutton,1)

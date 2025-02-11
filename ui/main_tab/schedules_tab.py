@@ -9,7 +9,21 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget,
                              QPushButton, QGroupBox, QScrollArea,  
                              QFrame, QDialog, QLabel, QLineEdit)  
 
+def string_to_list(string, separator=', '):  
+    return string.split(separator) 
+def list_to_string(list, separator=', '):  
+    return separator.join(map(str, list)) 
 
+class DayButton(QPushButton):
+    def __init__(self,date,state):  
+        super().__init__()  
+        self.date=date
+        self.state=state
+
+class ScheduleButton(QPushButton):
+    def __init__(self,name,number):  
+        super().__init__(name)  
+        self.button_number=number
 class UserInputDialog(QDialog):  
     def __init__(self):  
         super().__init__()  
@@ -116,6 +130,7 @@ class SchedulesTab(QMainWindow):
             h.update(data_id.encode())
             data_id=h.hexdigest()
             query1.addBindValue(data_id)
+            counter=0
             while query1.next():
                 counter = counter+1
             counter = counter+1
@@ -130,14 +145,14 @@ class SchedulesTab(QMainWindow):
             query2.addBindValue(ndays)
             query2.addBindValue(start_date)
             query2.addBindValue(end_date)
-            query2.addBindValue("?")
+            query2.addBindValue(list_to_string(["undone"]*int(ndays)))
             query2.addBindValue(counter)
             query2.exec_() 
             Schedule_name = dialog.get_button_name()  
+            self.number=counter
             self.add_button_to_left_area(Schedule_name)  
-
     def add_button_to_left_area(self, Schedule_name):  
-        new_push_button = QPushButton(Schedule_name)  
+        new_push_button = ScheduleButton(Schedule_name,number=self.number)  
         new_push_button.clicked.connect(lambda: self.handle_button_click(new_push_button))  
         self.schedules_buttons_layout.addWidget(new_push_button)  
 
@@ -145,6 +160,37 @@ class SchedulesTab(QMainWindow):
         if self.delete_radio_button.isChecked():  
             self.schedules_buttons_layout.removeWidget(button) 
             button.deleteLater()
+        else : 
+            query_days=QSqlQuery()
+            sender = self.sender()
+            selected_schedule_num=sender.button_number
+            data_id = current_user.logged_in_user.data_id
+            h=hash.new("SHA256")
+            h.update(str(data_id).encode())
+            data_id=h.hexdigest()
+            query_days.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")
+            query_days.addBindValue(data_id)
+            query_days.addBindValue(selected_schedule_num)
+            query_days.exec_()
+            days=query_days.value(5)
+            start_date=query_days.value(6)
+            for i in range(int(days)):
+                number=selected_schedule_num
+                data_list=query_days.value(8)
+                data_list=string_to_list(data_list)
+                current_date = start_date + timedelta(days=i)
+                state=data_list[i]
+                button=DayButton(str(i),date=current_date,state=state)
+                if state=="done":
+                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png)")
+                if state=="current_day":
+                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png)")
+                if state=="undone":
+                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png)")
+                if state=="perfect":
+                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png)")
+                self.days_layout.addWidget(button)
+            # select every day in the schedule
 
     def connect_buttons(self,tabs):
         self.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(0))
