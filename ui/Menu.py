@@ -9,6 +9,7 @@ from users import current_user
 class Menu(QWidget):  
     def __init__(self):  
         super().__init__()  
+        self.home_times=0
         # Create buttons and group them  
         self.menu_button = QRadioButton("Menu", self)  
         self.home_button = QRadioButton("Home", self)  
@@ -55,7 +56,9 @@ class Menu(QWidget):
     def home_button_clicked_function(self, tabs,tab):  
         if current_user.logged_in_user.log_in_status == True:  
             tabs.setCurrentIndex(7)
-            tab.get_schedules()
+            if self.home_times==0:
+                tab.get_schedules()
+                self.home_times=1
         if current_user.logged_in_user.log_in_status == False:   
             tabs.setCurrentIndex(6)  
     #--------------------

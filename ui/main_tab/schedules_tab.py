@@ -1,7 +1,7 @@
 import sys  
 import hashlib as hash
 import re
-from datetime import date,timedelta
+from datetime import date,timedelta,datetime
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from users import current_user
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget,  
@@ -80,11 +80,14 @@ class SchedulesTab(QMainWindow):
         self.main_layout = QVBoxLayout()  
         self.main_widget.setLayout(self.layout)  
         self.days_buttons_group = QGroupBox("Days")  
-        self.days_buttons_layout = QVBoxLayout()  
+        self.days_buttons_layout = QHBoxLayout()  
+        self.days_buttons_layout.setContentsMargins(0,0,0,0)
+        self.days_buttons_group.setContentsMargins(0,0,0,0)
         self.days_buttons_group.setLayout(self.days_buttons_layout)  
         self.days_layout = QHBoxLayout()  
         self.days_layout.addWidget(self.days_buttons_group, 80)  
         self.main_layout.addLayout(self.days_layout, 60)  
+        self.days_layout.setContentsMargins(0,0,0,0)
         self.schedules_layout = QHBoxLayout()  
         self.schedules_buttons_group = QGroupBox("Schedules")  
         self.schedules_buttons_layout = QHBoxLayout()  
@@ -127,7 +130,7 @@ class SchedulesTab(QMainWindow):
             number=number+1
             current_user.logged_in_user.newest_schedule=number
             query2=QSqlQuery()
-            query2.prepare("""INSERT INTO Data (id, weight, height, age, gender, days, start_date, end_date, data, number)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+            query2.prepare("""INSERT INTO Data (id, weight, height, age, gender, days, start_date, end_date, data, number, name)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
             query2.addBindValue(data_id)
             query2.addBindValue(int(weight))
             query2.addBindValue(int(height))
@@ -136,7 +139,7 @@ class SchedulesTab(QMainWindow):
             query2.addBindValue(ndays)
             query2.addBindValue(str(start_date))
             query2.addBindValue(str(end_date))
-            query2.addBindValue(list_to_string(["undone"]*int(ndays)))
+            query2.addBindValue(list_to_string(["none"]*int(ndays)))
             query2.addBindValue(number)
             Schedule_name = dialog.get_button_name() 
             query2.addBindValue(Schedule_name)
@@ -144,55 +147,87 @@ class SchedulesTab(QMainWindow):
             self.add_button_to_left_area(Schedule_name,number=number) 
     def add_button_to_left_area(self, Schedule_name,number):  
         new_push_button = ScheduleButton(Schedule_name,number=number)  
-        new_push_button.clicked.connect(lambda: self.handle_button_click(new_push_button))  
+        new_push_button.clicked.connect(lambda: self.handle_button_click())  
         self.schedules_buttons_layout.addWidget(new_push_button)  
+    
+    
+    def is_widget_in_layout(self, widget, layout):  
+        for i in range(layout.count()):  
+            item = layout.itemAt(i)  
+            if item.widget() == widget:  
+                return True  
+        return False 
     
     def get_schedules(self):
         query1=QSqlQuery()
         query1.prepare("""SELECT * FROM Data WHERE id = ? """)
         query1.addBindValue(current_user.logged_in_user.data_id)
         query1.exec_()
-        if query1.next():
+        while query1.next():
             new_push_button = ScheduleButton(name=str(query1.value(10)),number=query1.value(9))  
-            new_push_button.clicked.connect(lambda: self.handle_button_click(new_push_button))  
-            self.schedules_buttons_layout.addWidget(new_push_button)  
-    def handle_button_click(self, button):  
+            new_push_button.clicked.connect(lambda: self.handle_button_click())  
+            if not self.is_widget_in_layout(new_push_button,self.schedules_buttons_layout):
+                self.schedules_buttons_layout.addWidget(new_push_button)
+            else:
+                new_push_button.deleteLater()
+  
+    def handle_button_click(self):  
+        sender = self.sender()  
+        selected_schedule_num = sender.button_number  
+        data_id = current_user.logged_in_user.data_id  
         if self.delete_radio_button.isChecked():  
-            self.schedules_buttons_layout.removeWidget(button) 
-            button.deleteLater()
-        else : 
-            query_days=QSqlQuery()
-            sender = self.sender()
-            selected_schedule_num=sender.button_number
-            print(selected_schedule_num)
-            data_id = current_user.logged_in_user.data_id
-            h=hash.new("SHA256")
-            h.update(str(data_id).encode())
-            data_id=h.hexdigest()
-            query_days.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")
-            query_days.addBindValue(data_id)
-            query_days.addBindValue(selected_schedule_num)
-            query_days.exec_()
-            days=query_days.value(5)
-            print(days)
-            start_date=query_days.value(6)
-            for i in range(int(days)):
-                number=selected_schedule_num
-                data_list=query_days.value(8)
-                data_list=string_to_list(data_list)
-                current_date = start_date + timedelta(days=i)
-                state=data_list[i]
-                button=DayButton(str(i),date=current_date,state=state)
-                if state=="done":
-                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png)")
-                if state=="none":
-                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png)")
-                if state=="undone":
-                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png)")
-                if state=="perfect":
-                            button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png)")
-                self.days_layout.addWidget(button)
-            # select every day in the schedule
+            delete_query = QSqlQuery()  
+            delete_query.prepare("""DELETE FROM Data WHERE id = ? and number = ?""")  
+            delete_query.addBindValue(data_id)  
+            delete_query.addBindValue(selected_schedule_num)  
+            delete_query.exec_()  
+            self.schedules_buttons_layout.removeWidget(sender)   
+            sender.deleteLater()  
+        else:
+            while self.days_buttons_layout.count():  
+                item = self.days_buttons_layout.takeAt(0)  
+                widget = item.widget()   
+                if widget is not None:  
+                    widget.deleteLater()   
+            query_days = QSqlQuery()  
+            query_days.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")  
+            query_days.addBindValue(data_id)  
+            query_days.addBindValue(selected_schedule_num)  
+            query_days.exec_()  
 
+            if query_days.next():  # Move to the first result  
+                days = query_days.value(5)  
+                start_date = query_days.value(6)  
+                for i in range(int(days)):  
+                    data_list = query_days.value(8)  
+                    if isinstance(start_date, str): 
+                        start_date = datetime.strptime(start_date, '%Y-%m-%d') 
+                    data_list = string_to_list(data_list)  
+                    current_date = start_date + timedelta(days=i)  
+                    state = data_list[i]  
+                    daybutton = DayButton(str(i+1), date=current_date, state=state)  
+                    daybutton.setMinimumSize(50,50)
+                    base_style = "font-size: 14px; font-weight: bold; color: White; border-radius: 0px;"  
+
+                    if daybutton.date == date.today():  
+                        today_style = "border-color: Blue; border-radius: 10px; border: 40px solid Blue;"  
+                        daybutton.setStyleSheet(base_style + today_style)  
+                    else:  
+                        daybutton.setStyleSheet(base_style)  
+
+                    if state == "done":  
+                        daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png);")  
+                    elif state == "none":  
+                        daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png);")  
+                    elif state == "undone":  
+                        daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png);")  
+                    elif state == "perfect":  
+                        daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png);")  
+
+                    self.days_buttons_layout.addWidget(daybutton) 
     def connect_buttons(self,tabs):
         self.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(0))

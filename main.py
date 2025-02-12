@@ -47,7 +47,7 @@ class mainw(QMainWindow):
 
         query_data = '''  
             CREATE TABLE IF NOT EXISTS Data (  
-                id INTEGER NOT NULL UNIQUE,  
+                id INTEGER NOT NULL,  
                 weight INTEGER,  
                 height INTEGER,  
                 age INTEGER,  
@@ -57,8 +57,7 @@ class mainw(QMainWindow):
                 end_date TEXT,
                 data BLOB,
                 number INTEGER,
-                name VARCHAR,
-                PRIMARY KEY(id)  
+                name VARCHAR
             );  
         '''   
 
