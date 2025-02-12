@@ -48,15 +48,16 @@ class mainw(QMainWindow):
         query_data = '''  
             CREATE TABLE IF NOT EXISTS Data (  
                 id INTEGER NOT NULL UNIQUE,  
-                weight NUMERIC,  
+                weight INTEGER,  
                 height INTEGER,  
-                age NUMERIC,  
+                age INTEGER,  
                 gender VARCHAR,
                 days TEXT,
-                start_date INTEGER,
-                end_date INTEGER,
+                start_date TEXT,
+                end_date TEXT,
                 data BLOB,
                 number INTEGER,
+                name VARCHAR,
                 PRIMARY KEY(id)  
             );  
         '''   
@@ -82,7 +83,7 @@ class mainw(QMainWindow):
 
     #connect all of the buttons
     def connect_all_buttons(self):
-        self.main_menu.connect_buttons(self.tabs)
+        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules)
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
@@ -141,7 +142,6 @@ class mainw(QMainWindow):
         #style all of the app
         self.set_styles()
         #-------------------
-
     #test tab
     def createtab2(self):
         vb1=QVBoxLayout()

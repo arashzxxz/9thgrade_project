@@ -23,16 +23,12 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         return "404"
     else :
         # get the users info
-        h=hashlib.new("SHA256")
-        h.update(str(query1.value(3)).encode())
-        data_id_wh=str(query1.value(3))
-        data_id=h.hexdigest()
+        data_id_wh=str(query1.value(0))
         data_query=QSqlQuery()
         data_query.prepare("""SELECT * FROM Data WHERE id = ?""")
-        data_query.addBindValue(data_id)
+        data_query.addBindValue(data_id_wh)
         data_query.exec_()
         current_user.logged_in_user.password=password
-        current_user.logged_in_user.h_password=h_password
         current_user.logged_in_user.username=username
         current_user.logged_in_user.log_in_status=True
         current_user.logged_in_user.weight=data_query.value(1)
@@ -40,6 +36,15 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         current_user.logged_in_user.age=data_query.value(3)
         current_user.logged_in_user.gender=data_query.value(4)
         current_user.logged_in_user.data_id=data_id_wh
+        query1=QSqlQuery()
+        query1.prepare("""SELECT * FROM Data WHERE id = ? ORDER BY number DESC""")
+        query1.addBindValue(data_id_wh)
+        query1.exec_()
+        if query1.next():
+            number=query1.value(9)
+        else:
+            number=-1
+        current_user.logged_in_user.newest_schedule=int(number)
         logged_in_tab.username.setText(current_user.logged_in_user.username)
         logged_in_tab.weight.setText(current_user.logged_in_user.weight)
         logged_in_tab.height1.setText(current_user.logged_in_user.height)

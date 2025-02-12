@@ -15,8 +15,8 @@ def list_to_string(list, separator=', '):
     return separator.join(map(str, list)) 
 
 class DayButton(QPushButton):
-    def __init__(self,date,state):  
-        super().__init__()  
+    def __init__(self,name,date,state):  
+        super().__init__(name)  
         self.date=date
         self.state=state
 
@@ -123,39 +123,39 @@ class SchedulesTab(QMainWindow):
             end_date = start_date + timedelta(days=int(ndays))
             data_id = current_user.logged_in_user.data_id
             counter=0
-            query1=QSqlQuery()
-            query1.prepare("""SELECT * FROM Data WHERE id = ? """)
-            query1.exec_()
-            h=hash.new("SHA256")
-            h.update(data_id.encode())
-            data_id=h.hexdigest()
-            query1.addBindValue(data_id)
-            counter=0
-            while query1.next():
-                counter = counter+1
-            counter = counter+1
-            current_user.logged_in_user.newest_schedule=counter
+            number=current_user.logged_in_user.newest_schedule
+            number=number+1
+            current_user.logged_in_user.newest_schedule=number
             query2=QSqlQuery()
             query2.prepare("""INSERT INTO Data (id, weight, height, age, gender, days, start_date, end_date, data, number)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
             query2.addBindValue(data_id)
-            query2.addBindValue(weight)
-            query2.addBindValue(height)
-            query2.addBindValue(age)
+            query2.addBindValue(int(weight))
+            query2.addBindValue(int(height))
+            query2.addBindValue(int(age))
             query2.addBindValue(gender)
             query2.addBindValue(ndays)
-            query2.addBindValue(start_date)
-            query2.addBindValue(end_date)
+            query2.addBindValue(str(start_date))
+            query2.addBindValue(str(end_date))
             query2.addBindValue(list_to_string(["undone"]*int(ndays)))
-            query2.addBindValue(counter)
+            query2.addBindValue(number)
+            Schedule_name = dialog.get_button_name() 
+            query2.addBindValue(Schedule_name)
             query2.exec_() 
-            Schedule_name = dialog.get_button_name()  
-            self.number=counter
-            self.add_button_to_left_area(Schedule_name)  
-    def add_button_to_left_area(self, Schedule_name):  
-        new_push_button = ScheduleButton(Schedule_name,number=self.number)  
+            self.add_button_to_left_area(Schedule_name,number=number) 
+    def add_button_to_left_area(self, Schedule_name,number):  
+        new_push_button = ScheduleButton(Schedule_name,number=number)  
         new_push_button.clicked.connect(lambda: self.handle_button_click(new_push_button))  
         self.schedules_buttons_layout.addWidget(new_push_button)  
-
+    
+    def get_schedules(self):
+        query1=QSqlQuery()
+        query1.prepare("""SELECT * FROM Data WHERE id = ? """)
+        query1.addBindValue(current_user.logged_in_user.data_id)
+        query1.exec_()
+        if query1.next():
+            new_push_button = ScheduleButton(name=str(query1.value(10)),number=query1.value(9))  
+            new_push_button.clicked.connect(lambda: self.handle_button_click(new_push_button))  
+            self.schedules_buttons_layout.addWidget(new_push_button)  
     def handle_button_click(self, button):  
         if self.delete_radio_button.isChecked():  
             self.schedules_buttons_layout.removeWidget(button) 
@@ -164,6 +164,7 @@ class SchedulesTab(QMainWindow):
             query_days=QSqlQuery()
             sender = self.sender()
             selected_schedule_num=sender.button_number
+            print(selected_schedule_num)
             data_id = current_user.logged_in_user.data_id
             h=hash.new("SHA256")
             h.update(str(data_id).encode())
@@ -173,6 +174,7 @@ class SchedulesTab(QMainWindow):
             query_days.addBindValue(selected_schedule_num)
             query_days.exec_()
             days=query_days.value(5)
+            print(days)
             start_date=query_days.value(6)
             for i in range(int(days)):
                 number=selected_schedule_num
@@ -183,7 +185,7 @@ class SchedulesTab(QMainWindow):
                 button=DayButton(str(i),date=current_date,state=state)
                 if state=="done":
                             button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png)")
-                if state=="current_day":
+                if state=="none":
                             button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png)")
                 if state=="undone":
                             button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png)")

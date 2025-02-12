@@ -43,8 +43,8 @@ class Menu(QWidget):
         self.setLayout(self.menu_layout)  
         #-------------------
     # Connecting buttons: called in main.py  
-    def connect_buttons(self, tabs):  
-        self.home_button.clicked.connect(lambda: self.home_button_clicked_function(tabs))  
+    def connect_buttons(self, tabs,tab):  
+        self.home_button.clicked.connect(lambda: self.home_button_clicked_function(tabs,tab))  
         self.status_button.clicked.connect(lambda: tabs.setCurrentIndex(1))  
         self.setting_button.clicked.connect(lambda: tabs.setCurrentIndex(2))  
         self.users_button.clicked.connect(lambda: tabs.setCurrentIndex(4))  
@@ -52,9 +52,10 @@ class Menu(QWidget):
     #--------------------------------------    
 
     # Home button clicked  
-    def home_button_clicked_function(self, tabs):  
+    def home_button_clicked_function(self, tabs,tab):  
         if current_user.logged_in_user.log_in_status == True:  
-            tabs.setCurrentIndex(7)  
+            tabs.setCurrentIndex(7)
+            tab.get_schedules()
         if current_user.logged_in_user.log_in_status == False:   
             tabs.setCurrentIndex(6)  
     #--------------------
