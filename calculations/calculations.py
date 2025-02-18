@@ -43,6 +43,7 @@ def calculate_ideal_weight(age,gender,height,bmi):
         (170.18 + 172.72) / 2, # Age 17  
         (167.64 + 173.99) / 2   # Age 18  
     ]  
+    ideal_weight=0
     if age<=19:
         if gender=="male":
             ideal_weight=2.27*age+10.5+(0.5*(height-males_avg[age-1]))
@@ -51,13 +52,27 @@ def calculate_ideal_weight(age,gender,height,bmi):
     else:
         ideal_weight=bmi*(height/100)*(height/100)
     return round(ideal_weight,1)
-def calorys_needed_per_day(weight,ideal_weight,days,gender,height,age):
-    weight_loss=weight-ideal_weight
-    daily_caloric_deficit=(weight_loss*3500)/days
-    if gender=="male":
-        total_daily_caloric_needs=10*weight+6.25*height-5*age+5
-    if gender=="female":
-        total_daily_caloric_needs=10*weight+6.25*height-5*age-161
-    daily_caloric_intake=total_daily_caloric_needs-daily_caloric_deficit
-    return round(daily_caloric_intake,1)
+
+def calorys_needed_per_day(weight, ideal_weight, days, gender, height, age, activity_level):  
+    weight_loss = weight - ideal_weight  
+    daily_caloric_deficit = (weight_loss * 3500) / days  
+    
+    if gender == "male":  
+        total_daily_caloric_needs = 10 * weight + 6.25 * height - 5 * age + 5  
+    else:  
+        total_daily_caloric_needs = 10 * weight + 6.25 * height - 5 * age - 161  
+
+    if activity_level == 'sedentary':  
+        total_daily_caloric_needs *= 1.2  
+    elif activity_level == 'lightly_active':  
+        total_daily_caloric_needs *= 1.375  
+    elif activity_level == 'moderately_active':  
+        total_daily_caloric_needs *= 1.55  
+    elif activity_level == 'very_active':  
+        total_daily_caloric_needs *= 1.725  
+    elif activity_level == 'super_active':  
+        total_daily_caloric_needs *= 1.9  
+
+    daily_caloric_intake = total_daily_caloric_needs - daily_caloric_deficit  
+    return round(daily_caloric_intake, 1)
 

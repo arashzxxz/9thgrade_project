@@ -2,9 +2,11 @@
 import sys
 import requests
 import os
+from assets.assests import get_assets_working_dir
 from users import current_user
+from calculations import check_time
 from ui.main_tab import exercise_tabs,schedules_tab,food_suggestion
-from ui import Menu, Settings_Tab, log_in_and_sign_in,styles
+from ui import Menu, Settings_Tab, log_in_and_sign_in,styles,chart_widget
 from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
@@ -30,6 +32,7 @@ class mainw(QMainWindow):
         #create tabs and menus and connecting buttons
         self.initui()
         self.connect_all_buttons()
+        check_time.start_background_task()
         #--------------------------------------------
 
     # Create database tables  
@@ -55,9 +58,14 @@ class mainw(QMainWindow):
                 days TEXT,
                 start_date TEXT,
                 end_date TEXT,
-                data BLOB,
+                data_days_state BLOB,
                 number INTEGER,
-                name VARCHAR
+                name VARCHAR,
+                data_days_calories BLOB,
+                data_days_workout BLOB,
+                bmi INTEGER,
+                ideal_weight INTEGER,
+                calories_per_day INTEGER
             );  
         '''   
 
@@ -82,20 +90,26 @@ class mainw(QMainWindow):
 
     #connect all of the buttons
     def connect_all_buttons(self):
-        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules)
+        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab)
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
-        self.main_tab.connect_buttons(self.tabs)
+        self.main_tab.connect_buttons(self.tabs,self.database)
         self.exercise_tab.timer_widget.connect_buttons()
         self.exercise_tab.connect_buttons(self.tabs)
         self.main_tab_schedules.connect_buttons(self.tabs)
         self.food_suggestion_tab.connect_buttons(self.tabs)
+        self.main_tab_schedules.expand_button.clicked.connect(self.expand_current_schedules_days)
     #-------------------------
-
+    
+    def expand_current_schedules_days(self):
+        self.tabs.setCurrentIndex(0)
+        self.main_tab.calendar_widget.create_calendar_buttons()
 
     def initui(self):
         #create all of the main tabs
+        get_assets_working_dir()
+        self.chart_tab = chart_widget.Chart_Widget(database = self.database)
         self.main_tab=main_widget.Main_widget()
         self.main_tab_schedules=schedules_tab.SchedulesTab()
         self.main_tab_schedules.get_database(database=self.database)
@@ -120,6 +134,7 @@ class mainw(QMainWindow):
         self.tabs.addTab(self.main_tab_log_in_error_tab,"")
         self.tabs.addTab(self.main_tab_schedules,"")
         self.tabs.addTab(self.food_suggestion_tab,"")
+        self.tabs.addTab(self.chart_tab,"")
         self.tabs.setStyleSheet('''QTabBar::tab{width: 0;height: 0; margin: 0; padding: 0; border: none;}''')
         self.tabs.setCurrentIndex(6)
         #-----------------------

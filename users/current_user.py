@@ -9,4 +9,5 @@ class users ():
         self.data_id="have not logged in yet"
         self.newest_schedule="have not logged in yet"
         self.log_in_status=False
+        self.selected_schedule="none"
 logged_in_user=users()

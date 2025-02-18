@@ -39,7 +39,8 @@ class Main_widget(QWidget):
         #--------------
 
     #connect all the buttons
-    def connect_buttons(self,tabs):
+    def connect_buttons(self,tabs,data_base):
+        self.calendar_widget.get_data_base(data_base)
         self.current_day_content2.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(5))
         self.current_day_content1.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(8))
         self.backbutton.clicked.connect(lambda : tabs.setCurrentIndex(7))
