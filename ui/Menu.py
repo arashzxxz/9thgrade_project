@@ -16,11 +16,13 @@ class Menu(QWidget):
         self.setting_button = QRadioButton("Settings", self)  
         self.status_button = QRadioButton("Status", self)  
         self.users_button = QRadioButton("Users", self)
+        self.streak_button = QRadioButton("Streak", self)
         self.menu_button.setObjectName("menub")  
         self.home_button.setObjectName("homeb")  
         self.status_button.setObjectName("statusb")  
         self.setting_button.setObjectName("settingb")  
         self.users_button.setObjectName("usersb")  
+        self.streak_button.setObjectName("streakb")
         self.menus_buttons_group = QButtonGroup(self)  
         self.menus_buttons_group.addButton(self.menu_button)  
         self.menus_buttons_group.addButton(self.home_button)  
@@ -38,8 +40,9 @@ class Menu(QWidget):
         self.menu_layout.addWidget(self.status_button, 2, 0)  
         self.menu_layout.addWidget(QLabel(""), 3, 0)  # Spacer  
         self.menu_layout.addWidget(QLabel(""), 4, 0)  # Spacer  
-        self.menu_layout.addWidget(self.users_button, 5, 0)  
-        self.menu_layout.addWidget(self.setting_button, 6, 0)  
+        self.menu_layout.addWidget(self.streak_button, 5, 0)
+        self.menu_layout.addWidget(self.users_button, 6, 0)  
+        self.menu_layout.addWidget(self.setting_button, 7, 0)  
         self.menu_layout.setContentsMargins(0, 0, 0, 0)  
         self.setLayout(self.menu_layout)  
         #-------------------
@@ -78,9 +81,11 @@ class Menu(QWidget):
             self.setting_button.setText("Settings") 
             self.status_button.setText("Status")  
             self.users_button.setText("User")
+            self.streak_button.setText("Streak")
         else:
             self.menu_button.setText("") 
             self.home_button.setText("") 
+            self.streak_button.setText("")
             self.setting_button.setText("") 
             self.status_button.setText("")  
             self.users_button.setText("")

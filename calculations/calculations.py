@@ -76,3 +76,9 @@ def calorys_needed_per_day(weight, ideal_weight, days, gender, height, age, acti
     daily_caloric_intake = total_daily_caloric_needs - daily_caloric_deficit  
     return round(daily_caloric_intake, 1)
 
+
+def string_to_list(string, separator=', '):  
+    return string.split(separator) 
+def list_to_string(list, separator=', '):  
+    return separator.join(map(str, list)) 
+

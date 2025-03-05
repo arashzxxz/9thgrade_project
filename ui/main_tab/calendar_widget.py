@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout,  QP
 from PyQt5.QtCore import Qt, QDate 
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 import main
+from calculations.calculations import string_to_list,list_to_string
 from datetime import date,timedelta,datetime
+from data.day_button_handle import set_state
 from ui.main_tab import main_widget,current_day_content
 from users import current_user
 class DayButton(QPushButton):
@@ -12,10 +14,6 @@ class DayButton(QPushButton):
         self.date=date
         self.state=state
 
-def string_to_list(string, separator=', '):  
-    return string.split(separator) 
-def list_to_string(list, separator=', '):  
-    return separator.join(map(str, list)) 
 
 class Calendar_widget(QWidget):  
     def __init__(self):  
@@ -42,7 +40,9 @@ class Calendar_widget(QWidget):
         self.setLayout(self.main_layout)
         #--------------
     def get_data_base(self,data_base):
-        self.data_base=data_base
+        self.database=data_base
+    def get_main_widget(self,main_widget):
+        self.main_widget=main_widget
     def create_calendar_buttons(self):  
         # Get the current months date 
         while self.button_layout.count():  
@@ -66,6 +66,7 @@ class Calendar_widget(QWidget):
                 current_date = start_date + timedelta(days=i)  
                 state = data_list[i]  
                 daybutton = DayButton(str(i+1), date=current_date, state=state)  
+                daybutton.clicked.connect(lambda : set_state(self.database,self.main_widget,state))
                 daybutton.setMinimumSize(50,50)
                 base_style = "font-size: 14px; font-weight: bold; color: White; border-radius: 0px;"  
 

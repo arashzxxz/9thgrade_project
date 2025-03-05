@@ -10,11 +10,6 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget,
                              QPushButton, QGroupBox, QScrollArea,  
                              QFrame, QDialog, QLabel, QLineEdit ,QComboBox,QGridLayout)  
 
-def string_to_list(string, separator=', '):  
-    return string.split(separator) 
-def list_to_string(list, separator=', '):  
-    return separator.join(map(str, list)) 
-
 class DayButton(QPushButton):
     def __init__(self,name,date,state):  
         super().__init__(name)  
@@ -175,13 +170,13 @@ class SchedulesTab(QMainWindow):
             query2.addBindValue(ndays)
             query2.addBindValue(str(start_date))
             query2.addBindValue(str(end_date))
-            query2.addBindValue(list_to_string(["none"]*int(ndays)))
+            query2.addBindValue(cal.list_to_string(["none"]*int(ndays)))
             query2.addBindValue(number)
             Schedule_name = dialog.get_button_name() 
             query2.addBindValue(Schedule_name)
-            query2.addBindValue(list_to_string(["0"]*int(ndays)))
-            query2.addBindValue(list_to_string(["0"]*int(ndays)))
-            bmi = cal.calculate_bmi(int(weight),int(height))
+            query2.addBindValue(cal.list_to_string(["0"]*int(ndays)))
+            query2.addBindValue(cal.list_to_string(["0"]*int(ndays)))
+            bmi = cal.calculate_bmi(int(height),int(weight))
             ideal_weight = cal.calculate_ideal_weight(int(age),gender,int(height),int(bmi))
             calories_per_day=cal.calorys_needed_per_day(int(weight),int(ideal_weight),int(ndays),gender,int(height),int(age),activity_level)
             query2.addBindValue(bmi)
@@ -216,7 +211,6 @@ class SchedulesTab(QMainWindow):
                 new_push_button.deleteLater()
   
     def handle_button_click(self):  
-        self.expand_button.show()
         sender = self.sender()  
         selected_schedule_num = sender.button_number  
         data_id = current_user.logged_in_user.data_id  
@@ -247,7 +241,7 @@ class SchedulesTab(QMainWindow):
                     data_list = query_days.value(8)  
                     if isinstance(start_date, str): 
                         start_date = datetime.strptime(start_date, '%Y-%m-%d') 
-                    data_list = string_to_list(data_list)  
+                    data_list = cal.string_to_list(data_list)  
                     current_date = start_date + timedelta(days=i)  
                     state = data_list[i]
                     daybutton = DayButton(str(i+1), date=current_date, state=state)  
@@ -275,5 +269,55 @@ class SchedulesTab(QMainWindow):
                     x=i%7
                     y=(i-i%7)/7
                     self.days_buttons_layout.addWidget(daybutton,int(y),int(x)) 
+                self.expand_button.show()
+    def load_schedule_days(self):
+        selected_schedule_num = current_user.logged_in_user.selected_schedule
+        data_id = current_user.logged_in_user.data_id
+        while self.days_buttons_layout.count():  
+            item = self.days_buttons_layout.takeAt(0)  
+            widget = item.widget()   
+            if widget is not None:  
+                widget.deleteLater()   
+        query_days = QSqlQuery()  
+        query_days.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")  
+        query_days.addBindValue(data_id)  
+        query_days.addBindValue(selected_schedule_num)  
+        query_days.exec_()  
+        if query_days.next():
+            days = query_days.value(5)  
+            start_date = query_days.value(6)  
+            for i in range(int(days)):  
+                data_list = query_days.value(8)  
+                if isinstance(start_date, str): 
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d') 
+                data_list = cal.string_to_list(data_list)  
+                current_date = start_date + timedelta(days=i)  
+                state = data_list[i]
+                daybutton = DayButton(str(i+1), date=current_date, state=state)  
+                daybutton.setMinimumSize(50,50)
+                base_style = "font-size: 14px; font-weight: bold; color: White; border-radius: 0px;"  
+
+                if daybutton.date == date.today():  
+                    today_style = "border-color: Blue; border-radius: 10px; border: 40px solid Blue;"  
+                    daybutton.setStyleSheet(base_style + today_style)  
+                else:  
+                    daybutton.setStyleSheet(base_style)  
+
+                if state == "done":  
+                    daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png);")  
+                elif state == "none":  
+                    daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png);")  
+                elif state == "undone":  
+                    daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png);")  
+                elif state == "perfect":  
+                    daybutton.setStyleSheet(daybutton.styleSheet() +   
+                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png);")  
+                x=i%7
+                y=(i-i%7)/7
+                self.days_buttons_layout.addWidget(daybutton,int(y),int(x)) 
+            self.expand_button.show()
     def connect_buttons(self,tabs):
         pass

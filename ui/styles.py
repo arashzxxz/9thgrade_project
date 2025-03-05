@@ -115,6 +115,18 @@ class style_sheets(QWidget):
                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/users.png);
                            
         }
+        QRadioButton#streakb::indicator::unchecked{
+                           background-color: transparent;
+                           border-radius: 0px ;
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);
+                           
+        }
+        QRadioButton#streakb::indicator::checked{
+                           background-color: """+selected_tabc+""";
+                           border-radius: 0px ;
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);
+                           
+        }
     QRadioButton{
     }
     QRadioButton:hover{

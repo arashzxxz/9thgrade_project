@@ -10,4 +10,7 @@ class users ():
         self.newest_schedule="have not logged in yet"
         self.log_in_status=False
         self.selected_schedule="none"
+        self.streak=0
+        self.freeze=0
+        self.last_day_online = "none"
 logged_in_user=users()

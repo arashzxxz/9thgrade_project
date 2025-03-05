@@ -4,14 +4,17 @@ import requests
 import os
 from assets.assests import get_assets_working_dir
 from users import current_user
+from datetime import datetime
 from calculations import check_time
+from calculations.calculations import string_to_list
+from data.check_streak import check_decreased
 from ui.main_tab import exercise_tabs,schedules_tab,food_suggestion
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles,chart_widget
 from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
-from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
-from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QScrollArea,QStyleFactory,QStackedWidget,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
-from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase,QStandardItemModel,QStandardItem
+from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout
+from PyQt5.QtGui import QIcon
+from data.update_streak import update_button
 class mainw(QMainWindow):
     def __init__(self):
         #create main window
@@ -32,7 +35,10 @@ class mainw(QMainWindow):
         #create tabs and menus and connecting buttons
         self.initui()
         self.connect_all_buttons()
-        check_time.start_background_task()
+        check_decreased(self.database,datetime.today())
+        #update_button(self.database)
+        check_time.start_background_task_undone(self.database)
+        check_time.start_background_task_notification(self.database, 12)
         #--------------------------------------------
 
     # Create database tables  
@@ -42,6 +48,10 @@ class mainw(QMainWindow):
                 user_id INTEGER PRIMARY KEY,  
                 username VARCHAR NOT NULL,  
                 password VARCHAR,  
+                streak INTEGER DEFAULT 0,
+                last_day_online VARCHAR,
+                freeze INTEGER DEFAULT 0,
+                last_day_streak VARCHAR,
                 FOREIGN KEY (user_id) REFERENCES Data(id)  
                 ON UPDATE NO ACTION ON DELETE CASCADE  
             );  
@@ -75,9 +85,6 @@ class mainw(QMainWindow):
         if not query.exec_(query_data):  
             QMessageBox.critical(None, "Error", "Could not create Data table: " + query.lastError().text())  
 
-    #----------------
-
-
     #open the data bases
     def get_data_base(self):  
         self.database = QSqlDatabase.addDatabase("QSQLITE")
@@ -94,15 +101,32 @@ class mainw(QMainWindow):
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
-        self.main_tab.connect_buttons(self.tabs,self.database)
+        self.main_tab.connect_buttons(self.tabs,self.database,self.main_tab.calendar_widget)
         self.exercise_tab.timer_widget.connect_buttons()
         self.exercise_tab.connect_buttons(self.tabs)
         self.main_tab_schedules.connect_buttons(self.tabs)
         self.food_suggestion_tab.connect_buttons(self.tabs)
         self.main_tab_schedules.expand_button.clicked.connect(self.expand_current_schedules_days)
+        self.main_tab.backbutton.clicked.connect(self.main_tab_schedules.load_schedule_days)
     #-------------------------
     
     def expand_current_schedules_days(self):
+        query_schedule_info = QSqlQuery()  
+        data_id = current_user.logged_in_user.data_id
+        selected_schedule = current_user.logged_in_user.selected_schedule
+        # print(data_id)
+        # print(selected_schedule)
+        query_schedule_info.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")  
+        query_schedule_info.addBindValue(data_id)  
+        query_schedule_info.addBindValue(selected_schedule)  
+        query_schedule_info.exec_()  
+        if query_schedule_info.exec_():
+            pass
+            if query_schedule_info.next():
+                pass
+        needed_calories = query_schedule_info.value(15)
+        list_status = string_to_list(query_schedule_info.value(8))
+        self.main_tab.current_day_content1.needed_calories_text2.setText(str(needed_calories))
         self.tabs.setCurrentIndex(0)
         self.main_tab.calendar_widget.create_calendar_buttons()
 
