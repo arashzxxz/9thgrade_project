@@ -1,7 +1,4 @@
-
 import sys
-import requests
-import os
 from assets.assests import get_assets_working_dir
 from users import current_user
 from datetime import datetime
@@ -12,9 +9,9 @@ from ui.main_tab import exercise_tabs,schedules_tab,food_suggestion
 from ui import Menu, Settings_Tab, log_in_and_sign_in,styles,chart_widget
 from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
-from PyQt5.QtWidgets import QApplication,QColorDialog,QMainWindow,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout
+from PyQt5.QtWidgets import QApplication,QMainWindow,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout
 from PyQt5.QtGui import QIcon
-from data.update_streak import update_button
+from data import update_streak
 class mainw(QMainWindow):
     def __init__(self):
         #create main window
@@ -39,6 +36,8 @@ class mainw(QMainWindow):
         #update_button(self.database)
         check_time.start_background_task_undone(self.database)
         check_time.start_background_task_notification(self.database, 12)
+        update_streak.get_menu(self.main_menu)
+        self.main_menu.home_button.setChecked(1)
         #--------------------------------------------
 
     # Create database tables  
@@ -75,7 +74,10 @@ class mainw(QMainWindow):
                 data_days_workout BLOB,
                 bmi INTEGER,
                 ideal_weight INTEGER,
-                calories_per_day INTEGER
+                calories_per_day INTEGER,
+                carbohydrates INTEGER,
+                protein INTEGER,
+                fat INTEGER
             );  
         '''   
 
@@ -99,7 +101,7 @@ class mainw(QMainWindow):
     def connect_all_buttons(self):
         self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab)
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
-        self.settings_customization_tab.connect_buttons(self.tabs)
+        self.settings_customization_tab.connect_buttons(self.tabs,self)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
         self.main_tab.connect_buttons(self.tabs,self.database,self.main_tab.calendar_widget)
         self.exercise_tab.timer_widget.connect_buttons()
@@ -108,6 +110,7 @@ class mainw(QMainWindow):
         self.food_suggestion_tab.connect_buttons(self.tabs)
         self.main_tab_schedules.expand_button.clicked.connect(self.expand_current_schedules_days)
         self.main_tab.backbutton.clicked.connect(self.main_tab_schedules.load_schedule_days)
+        self.settings_customization_tab.appply_button.clicked.connect(lambda : self.set_all_styles(self.settings_customization_tab.background.currentText(),self.settings_customization_tab.buton_color.currentText(),self.settings_customization_tab.FontColor.currentText()))
     #-------------------------
     
     def expand_current_schedules_days(self):
@@ -137,10 +140,9 @@ class mainw(QMainWindow):
         self.main_tab=main_widget.Main_widget()
         self.main_tab_schedules=schedules_tab.SchedulesTab()
         self.main_tab_schedules.get_database(database=self.database)
-        self.content_tab2=self.createtab2()
         self.exercise_tab=exercise_tabs.Exercise_tab()
         self.food_suggestion_tab=food_suggestion.Food_suggestions()
-        self.settings_tab=Settings_Tab.setting_tab()
+        self.settings_tab=Settings_Tab.setting_tab(self.database)
         self.settings_tab.setObjectName("settings_tab")
         self.settings_customization_tab=Settings_Tab.setting_customization_tab()
         self.log_in_and_sign_in_tab=log_in_and_sign_in.connect_pages()
@@ -150,7 +152,7 @@ class mainw(QMainWindow):
         #connect all of the tabs
         self.tabs=QTabWidget()
         self.tabs.addTab(self.main_tab,"")
-        self.tabs.addTab(self.content_tab2,"")
+        self.tabs.addTab(QWidget(self),"")
         self.tabs.addTab(self.settings_tab,"")
         self.tabs.addTab(self.settings_customization_tab,"")
         self.tabs.addTab(self.log_in_and_sign_in_tab,"")
@@ -178,23 +180,83 @@ class mainw(QMainWindow):
         #---------------------------
 
         #style all of the app
-        self.set_styles()
-        #-------------------
-    #test tab
-    def createtab2(self):
-        vb1=QVBoxLayout()
-        vb1.addWidget(QPushButton("2",self))
-        gui=QWidget()
-        gui.setLayout(vb1)
-        return gui
-    #--------
-
-    #set the styles
-    def set_styles(self):
-        # self.setStyleSheet(styles.style_sheets.main_style)
+        self.main_tab_schedules.delete_radio_button.setObjectName("deleterb")
         self.main_menu.setStyleSheet(styles.style_sheets.menu_style)
-        # self.main_widget.setStyleSheet(styles.style_sheets.main_style)
-    #-------------
+        self.get_theme()
+        #-------------------
+    def get_theme(self):  
+        with open("theme.txt", "r") as f:  
+            lines = f.readlines()  
+            background = lines[0].strip()  
+            button = lines[1].strip()  
+            font = lines[2].strip()  
+            self.set_all_styles(background,button,font)  
+
+    def save_theme(self, background, button, font):  
+        with open("theme.txt", "w") as f:  
+            f.writelines([background + "\n", button + "\n", font + "\n"])  
+
+    def set_all_styles(self,background,button,font):
+        b1=""
+        b2=""
+        bg1=""
+        bg2=""
+        fc=font
+        background_colors = {  
+            "White": ("#cfcfcf", "#a3a3a2"),  
+            "Gray": ("#2e2e2e", "#242423"),  
+            "Dark": ("#121212", "#000000"),  
+            "Olive": ("#1a200e", "#273013"),
+            "Darkpurple": ("#240020","#380132") 
+        }  
+
+        button_colors = {  
+            "DarkGreen": ("#014d02", "#013d03"),  
+            "DarkBlue": ("#0b0e29", "#080b21"),  
+            "Lightgreen": ("#27a32b", "#48cf13"),  
+            "LightBlue": ("#117e96", "#1aa7c7"),  
+            "Yellow": ("#d9ad1c", "#f5e616"),  
+            "Orange": ("#d65900", "#ff8800"),
+            "Lightred": ("#eb4034", "#992b23"),
+            "Darkpurple": ("#3c0b4d","#220436")
+        }  
+
+        bg1, bg2 = background_colors.get(background, (None, None))  
+        b1, b2 = button_colors.get(button, (None, None))  
+        self.setStyleSheet("""  
+            QWidget { background-color: """+bg1+"""; color: """+fc+""";}  
+            QPushButton { color: """+fc+"""; border-radius: 10px; padding: 10px; background-color: """+b1+""";}  
+            QLabel { color: """+fc+"""; }  
+            QLineEdit { background-color: """+bg1+"""; color: """+fc+"""; border-radius: 5px; padding: 5px; }  
+            QComboBox { background-color: """+bg1+"""; color: """+fc+"""; border-width: 2px; border-style: solid; border-color: """+b1+""";}  
+            QScrollBar:vertical { background: """+bg1+"""; width: 10px; }  
+            QScrollBar::handle:vertical { min-height: 20px; border-radius: 5px; background: """+b1+"""; }  
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { background: """+bg1+"""; }  
+            QLineEdit {border-radius: 5px; border-color: """+fc+"""; border-width: 2px; border-style: solid; }
+            QLineEdit::hover {background: """+bg2+"""; } 
+            QComboBox::hover { background: """+bg2+"""; }
+            QPushButton::hover {background: """+b2+"""; }
+            QRadioButton#deleterb::indicator {border-color: """+b1+""";background-color: """+bg1+"""; color: """+fc+"""; border-width: 2px; border-style: solid;}
+            QTimeEdit {border-radius: 5px; border-width: 2px; border-style: solid;border-color: """+b1+""";}
+            QRadioButton#deleterb::indicator::checked {background-color: #540000; }
+            QRadioButton#deleterb::indicator::hover {background-color: #360000; }
+            QTimeEdit::drop-down::hover {background: """+b2+"""; }  
+            QTimeEdit::drop-down {border-color: """+b1+""";border-radius: 5px; border-width: 2px; border-style: solid;}  
+            QPushButton:pressed {margin: 2px 4px 4px 2px;}
+            QRadioButton:pressed {margin: 4px 4px 4px 4px;}     
+        """)  
+        self.save_theme(background,button,font)
+    def set_streak_button (self):
+        self.main_menu.streak.streak_button.setStyleSheet("""
+        QRadioButton#streakb::indicator::unchecked{
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                           
+        }
+        QRadioButton#streakb::indicator::checked{
+                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                           
+        }""")
+
 
 
 def main():

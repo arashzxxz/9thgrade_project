@@ -3,7 +3,9 @@ from users import current_user
 from datetime import datetime  
 import os, sys
 import sys
-#TODO : IMPORT MENU
+def get_menu (main_menu):
+    main_menu = main_menu
+
 def update_button(database):  
     query1 = QSqlQuery()  
     query1.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")  
@@ -15,7 +17,7 @@ def update_button(database):
     if isinstance(last_day_streak, str):  
         last_day_streak = datetime.strptime(last_day_streak, '%Y-%m-%d')
     if last_day_streak == today :
-        window.main_menu.streak_button.setStyleSheet("image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);")
+        main_menu.streak_button.setStyleSheet("image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);")
     else :
-        window.main_menu.streak_button.setStyleSheet("image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);")
+        main_menu.streak_button.setStyleSheet("image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);")
     

@@ -2,70 +2,105 @@ from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 from users import current_user  
 from datetime import datetime  
 from calculations.calculations import string_to_list, list_to_string  
-def check_increased(database, date, days):  
-    query1 = QSqlQuery()  
-    query1.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")  
-    query1.addBindValue(current_user.logged_in_user.data_id)  
-    query1.addBindValue(current_user.logged_in_user.selected_schedule)  
-    query1.exec_()  
+
+def check_increased(database, date, days):   
+    
+    query = QSqlQuery()  
+    query.prepare("""SELECT * FROM Data WHERE id = ? AND number = ?""")  
+    query.addBindValue(current_user.logged_in_user.data_id)  
+    query.addBindValue(current_user.logged_in_user.selected_schedule)  
+    
+    if not query.exec_():  
+        print("Query execution failed")  
+        return  
+    
     t = 0  
-    while query1.next():  
-        list_status = string_to_list(query1.value(8))  
-        end_date = query1.value(7)   
+    while query.next():  
+        list_status = string_to_list(query.value(8))  
+        end_date = query.value(7)  
+
         if isinstance(end_date, str):  
             end_date = datetime.strptime(end_date, '%Y-%m-%d')  
-
+        
         if end_date >= date:  
             if list_status[days] != "none" and t == 0:  
                 t = 1  
-                query_update = QSqlQuery()  
-                query_update.prepare("""UPDATE User SET last_day_online = ? WHERE username = ? AND password = ?""")  
-                query_update.addBindValue(current_user.logged_in_user.streak + 1)  
-                query_update.addBindValue(current_user.logged_in_user.username)  
-                query_update.addBindValue(current_user.logged_in_user.password)  
-                query_update.exec_()  
+                streak_increment_update = QSqlQuery()  
+                streak_increment_update.prepare(  
+                    """UPDATE User SET last_day_online = ?, streak = ? WHERE username = ? AND password = ?"""  
+                )  
+                streak_increment_update.addBindValue(current_user.logged_in_user.streak + 1)  
+                streak_increment_update.addBindValue(current_user.logged_in_user.streak + 1)  
+                streak_increment_update.addBindValue(current_user.logged_in_user.username)  
+                streak_increment_update.addBindValue(current_user.logged_in_user.password)  
+                
+                if not streak_increment_update.exec_():  
+                    print("Failed to update streak")  
+                    return  
+                
+                current_user.logged_in_user.streak += 1  
+
+    if t == 1:  
+        from main import window 
+        window.set_streak_button()  
 
 def check_decreased(database, date):  
-    query1 = QSqlQuery()  
-    query1.prepare("""SELECT * FROM Data WHERE id = ? and number = ?""")  
-    query1.addBindValue(current_user.logged_in_user.data_id)  
-    query1.addBindValue(current_user.logged_in_user.selected_schedule)  
-    query1.exec_()  
-    max_end_date = datetime.min
-    while query1.next():  
-        end_date = query1.value(7) 
+    query = QSqlQuery()  
+    query.prepare("""SELECT * FROM Data WHERE id = ? AND number = ?""")  
+    query.addBindValue(current_user.logged_in_user.data_id)  
+    query.addBindValue(current_user.logged_in_user.selected_schedule)  
+    
+    if not query.exec_():  
+        print("Query execution failed")  
+        return  
+
+    max_end_date = datetime.min  
+    start_date = None  
+    
+    while query.next():  
+        end_date = query.value(7)  
+
         if isinstance(end_date, str):  
-            end_date = datetime.strptime(end_date, '%Y-%m-%d') 
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')  
+        
         if end_date > max_end_date:  
             max_end_date = end_date  
-    last_check_date = min(max_end_date, datetime.today())  
-    start_date = query1.value(6)  
+        
+        start_date = query.value(6)  
+
     if start_date is None:  
         print("Start date is None, cannot perform date calculations.")  
-        return
+        return  
+
     if isinstance(start_date, str):  
-        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')  
 
-    days = (last_check_date - start_date).days  
+    last_check_date = min(max_end_date, datetime.today())  
+    days_difference = (last_check_date - start_date).days  
 
-    if days != 0:  
+    if days_difference != 0:  
         freezes = current_user.logged_in_user.freeze  
-        days = days - freezes  
-        freezes = freezes - days  
-        if freezes < 0:  
-            freezes = 0  
-        current_user.logged_in_user.freeze = freezes  
+        days_difference -= freezes  
+        freezes -= days_difference  
+        
+        current_user.logged_in_user.freeze = max(freezes, 0)  
 
-        query_update = QSqlQuery()  
-        query_update.prepare("""UPDATE User SET freeze = ? WHERE username = ? AND password = ?""")  
-        query_update.addBindValue(freezes)  
-        query_update.addBindValue(current_user.logged_in_user.username)  
-        query_update.addBindValue(current_user.logged_in_user.password)  
-        query_update.exec_()  
-    if days >=0 :
-      query_update = QSqlQuery()  
-      query_update.prepare("""UPDATE User SET streak = ? WHERE username = ? AND password = ?""")  
-      query_update.addBindValue(0)  
-      query_update.addBindValue(current_user.logged_in_user.username)  
-      query_update.addBindValue(current_user.logged_in_user.password)  
-      query_update.exec_()    
+        freeze_update = QSqlQuery()  
+        freeze_update.prepare("""UPDATE User SET freeze = ? WHERE username = ? AND password = ?""")  
+        freeze_update.addBindValue(current_user.logged_in_user.freeze)  
+        freeze_update.addBindValue(current_user.logged_in_user.username)  
+        freeze_update.addBindValue(current_user.logged_in_user.password)  
+        
+        if not freeze_update.exec_():  
+            print("Failed to update freeze")  
+            return  
+
+    if days_difference >= 0:  
+        streak_reset_update = QSqlQuery()  
+        streak_reset_update.prepare("""UPDATE User SET streak = ? WHERE username = ? AND password = ?""")  
+        streak_reset_update.addBindValue(0)  
+        streak_reset_update.addBindValue(current_user.logged_in_user.username)  
+        streak_reset_update.addBindValue(current_user.logged_in_user.password)  
+        
+        if not streak_reset_update.exec_():  
+            print("Failed to reset streak")  

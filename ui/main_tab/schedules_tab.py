@@ -161,7 +161,7 @@ class SchedulesTab(QMainWindow):
             number=number+1
             current_user.logged_in_user.newest_schedule=number
             query2=QSqlQuery()
-            query2.prepare("""INSERT INTO Data (id, weight, height, age, gender, days, start_date, end_date, data_days_state, number, name, data_days_calories, data_days_workout, bmi, ideal_weight, calories_per_day)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
+            query2.prepare("""INSERT INTO Data (id, weight, height, age, gender, days, start_date, end_date, data_days_state, number, name, data_days_calories, data_days_workout, bmi, ideal_weight, calories_per_day , carbohydrates, protein , fat)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
             query2.addBindValue(data_id)
             query2.addBindValue(int(weight))
             query2.addBindValue(int(height))
@@ -179,9 +179,14 @@ class SchedulesTab(QMainWindow):
             bmi = cal.calculate_bmi(int(height),int(weight))
             ideal_weight = cal.calculate_ideal_weight(int(age),gender,int(height),int(bmi))
             calories_per_day=cal.calorys_needed_per_day(int(weight),int(ideal_weight),int(ndays),gender,int(height),int(age),activity_level)
+            macronutrient_per_day = cal.calculate_macronutrient_needed_perday(int(weight),activity_level,int(age),gender)
+
             query2.addBindValue(bmi)
             query2.addBindValue(ideal_weight)
             query2.addBindValue(calories_per_day)
+            query2.addBindValue(macronutrient_per_day.get("carbohydrates"))
+            query2.addBindValue(macronutrient_per_day.get("protein"))
+            query2.addBindValue(macronutrient_per_day.get("fat"))
             query2.exec_() 
             self.add_button_to_left_area(Schedule_name,number=number) 
     def add_button_to_left_area(self, Schedule_name,number):  

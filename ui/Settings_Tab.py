@@ -4,12 +4,13 @@ from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QTimeEdit,QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
-
+from calculations import check_time
 
 class setting_tab(QWidget):
-    def __init__(self):
+    def __init__(self,database):
         super().__init__()
         #create all the widgets
+        self.database=database
         self.customization_header=QLabel("Customization",self)
         self.section_seperator1=QLabel("",self)
         self.notification_header=QLabel("Notification",self)
@@ -48,7 +49,32 @@ class setting_tab(QWidget):
         self.main_layout.setContentsMargins(0,0,0,0)
         self.setContentsMargins(0,0,0,0)
         self.setLayout(self.main_layout)
-        self.setStyleSheet(styles.style_sheets.requierd_settings_style)
+        self.setStyleSheet("""
+    QLabel#separator1{
+        border : solid black;
+        border-width : 5px 0px 0px 0px;
+    }
+    QLabel#separator2{
+        border : solid black;
+        border-width : 5px 0px 0px 0px;
+    }
+    QLabel#separator3{
+        border : solid black;
+        border-width : 5px 0px 0px 0px;
+    }
+    QLabel#header1{
+        font:30px;
+        font-family: Arial;
+    }
+    QLabel#header2{
+        font:30px;
+        font-family: Arial;
+    }
+    QLabel#header3{
+        font:30px;
+        font-family: Arial;
+    }
+    """)
         #--------
     #create customization layout
     def settings_customization(self):
@@ -76,26 +102,6 @@ class setting_tab(QWidget):
         
         return self.grid
     
-    #create notification layout
-    def settings_notification(self):
-
-        #create buttons and texts
-        self.change_sending_time_text=QLabel("Change sending time : ",self)
-        self.change_sending_time_button=QTimeEdit(self)
-        self.change_sending_time_submit_button=QPushButton("Change time",self)
-        #------------------------
-
-        #create main widget and main layout
-        
-        self.grid1=QGridLayout(self)
-        self.grid1.addWidget(self.change_sending_time_text,0,0,1,2)
-        self.grid1.addWidget(self.change_sending_time_button,0,5,1,2)
-        self.grid1.addWidget(self.change_sending_time_submit_button,1,0,1,7)
-        #----------------------------------
-
-        
-        return self.grid1
-    
     #create data layout
     def settings_data(self):
 
@@ -117,7 +123,7 @@ class setting_tab(QWidget):
     
     def delete_all_users(self):
         query1=QSqlQuery()
-        query1.prepare("""DELETE * FROM User """)
+        query1.prepare("""DROP TABLE IF EXISTS User """)
         query1.exec_()
 
 
@@ -131,24 +137,60 @@ class setting_tab(QWidget):
         
     def delete_all_data(self):
         query1=QSqlQuery()
-        query1.prepare("""DELETE * FROM User """)
+        query1.prepare("""DROP TABLE IF EXISTS User """)
         query1.exec_()
         query2=QSqlQuery()
-        query2.prepare("""DELETE * FROM Data """)
+        query2.prepare("""DROP TABLE IF EXISTS Data """)
         query2.exec_()
+    #create notification layout
+    def settings_notification(self):
+
+        #create buttons and texts
+        self.change_sending_time_text=QLabel("Change sending time : ",self)
+        self.change_sending_time_button=QTimeEdit(self)
+        self.change_sending_time_submit_button=QPushButton("Change time",self)
+        #------------------------
+
+        #create main widget and main layout
         
+        self.grid1=QGridLayout(self)
+        self.grid1.addWidget(self.change_sending_time_text,0,0,1,2)
+        self.grid1.addWidget(self.change_sending_time_button,0,5,1,2)
+        self.grid1.addWidget(self.change_sending_time_submit_button,1,0,1,7)
+        self.change_sending_time_submit_button.clicked.connect(self.change_notif_sending_time)
+        #----------------------------------
+
+        
+        return self.grid1
+    #change notification time
+    def change_notif_sending_time(self):  
+        time = self.change_sending_time_button.time()  
+        time2 = time.hour()
+        check_time.set_notification_time(self.database,time2)     
 class setting_customization_tab(QWidget):
     def __init__(self):
         super().__init__()
         self.tab2 = self.create_main_tab()
     def create_main_tab(self):
+        self.FontColor = QComboBox(self)
         self.tab1_main_layout=QVBoxLayout(self)
-        self.tab1_grid_layout=QGridLayout(self)
         self.tab1_header_layout=QGridLayout(self)
         self.tab1_button_layout=QHBoxLayout(self)
+        self.tab1_group_button_layout = QHBoxLayout(self)
         self.appply_button=QPushButton("Apply",self)
         self.cancel_button=QPushButton("Cancel",self)
         self.back_button=QPushButton("",self)
+        self.buton_color = QComboBox(self)
+        self.background = QComboBox(self)
+        self.buton_color.addItems(["DarkGreen","DarkBlue","Lightgreen","LightBlue","Yellow","Orange","Lightred","Darkpurple"])
+        self.background.addItems(["White","Gray","Dark","Olive","Darkpurple"])
+        self.FontColor.addItems(["White","Black"])
+        self.tab1_group_button_layout.addWidget(QLabel("Button Color : "))
+        self.tab1_group_button_layout.addWidget(self.buton_color)
+        self.tab1_group_button_layout.addWidget(QLabel("Background Color : "))
+        self.tab1_group_button_layout.addWidget(self.background)
+        self.tab1_group_button_layout.addWidget(QLabel("Font Color : "))
+        self.tab1_group_button_layout.addWidget(self.FontColor)
         self.back_button.setIcon(QIcon('C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png'))
         size=QSize(40,40)
         self.back_button.setIconSize(size)
@@ -160,49 +202,26 @@ class setting_customization_tab(QWidget):
         self.tab1_header_layout.addWidget(QLabel("",self),0,3)
         self.tab1_header_layout.addWidget(QLabel("",self),0,4)
         self.tab1_header_layout.addWidget(self.header,0,5,1,2)
-        self.background_color_label=QLabel("Background color : ",self)
-        self.menu_background_color_label=QLabel("Menu background color : ",self)
-        self.header_text_color=QLabel("Header text color : ",self)
-        self.text_color=QLabel("Text color : ",self)
-        self.button_background_color=QLabel("Button background color : ",self)
-        self.button_border_color=QLabel("Button border color : ",self)
-        self.border_color=QLabel("Border color : ",self)
-        self.button_hover_color=QLabel("Button hover color : ",self)
-        self.tab1_grid_layout.addWidget(self.background_color_label,0,0,1,2)
-        self.tab1_grid_layout.addWidget(self.menu_background_color_label,1,0,1,2)
-        self.tab1_grid_layout.addWidget(self.header_text_color,2,0,1,2)
-        self.tab1_grid_layout.addWidget(self.text_color,3,0,1,2)
-        self.tab1_grid_layout.addWidget(self.button_background_color,4,0,1,2)
-        self.tab1_grid_layout.addWidget(self.button_border_color,5,0,1,2)
-        self.tab1_grid_layout.addWidget(self.border_color,6,0,1,2)
-        self.tab1_grid_layout.addWidget(self.button_hover_color,7,0,1,2)
-        for i in range(8):
-            self.tab1_grid_layout.addWidget(QLabel("",self),i,2,1,2)
-        for i in range(8):
-            self.tab1_grid_layout.addWidget(QLabel("R : ",self),i,5,1,1)
-        self.rg_bline_edit=[]
-        for i in range(8):
-            ss=[]
-            ss.append(QLineEdit(self))
-            ss.append(QLineEdit(self))
-            ss.append(QLineEdit(self))
-            self.rg_bline_edit.append(ss)
-            self.tab1_grid_layout.addWidget(self.rg_bline_edit[i][0],i,6,1,2)
-            self.tab1_grid_layout.addWidget(QLabel("G : ",self),i,8,1,1)
-            self.tab1_grid_layout.addWidget(self.rg_bline_edit[i][1],i,9,1,2)
-            self.tab1_grid_layout.addWidget(QLabel("B : ",self),i,11,1,1)
-            self.tab1_grid_layout.addWidget(self.rg_bline_edit[i][2],i,12,1,2)
+        self.header.setAlignment(Qt.AlignRight)
         self.tab1_button_layout.addWidget(self.appply_button)
         self.tab1_button_layout.addWidget(self.cancel_button)
-        self.tab1_main_layout.addLayout(self.tab1_header_layout)
-        self.tab1_main_layout.addLayout(self.tab1_grid_layout)
-        self.tab1_main_layout.addLayout(self.tab1_button_layout)
+        self.tab1_main_layout.addLayout(self.tab1_header_layout,10)
+        self.tab1_main_layout.addLayout(self.tab1_group_button_layout,60)
+        self.tab1_main_layout.addLayout(self.tab1_button_layout,10)
+        self.back_button.setMaximumSize(50,50)
+        
+
         self.setLayout(self.tab1_main_layout)
-        self.setStyleSheet(styles.style_sheets.required_settings_customaization_tab)
+        self.setStyleSheet("""
+    QPushButton#back_button{
+        padding: 25px 25px 25px 25px;
+        background: transparent;
+    }
+    """)
     
     
     #connecting the buttons
-    def connect_buttons(self,tabs):
+    def connect_buttons(self,tabs,widget):
         self.back_button.clicked.connect(lambda : tabs.setCurrentIndex(2))
         self.cancel_button.clicked.connect(lambda : tabs.setCurrentIndex(2))
     #---------------------

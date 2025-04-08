@@ -10,8 +10,8 @@ from calculations.calculations import list_to_string, string_to_list
 import pytz  
 from plyer import notification  
 
+notification_thread = None
 def send_notification():  
-    # Send a notification  
     notification.notify(  
         title="Time Alert",  
         message="Don't forget to do your lessons",  
@@ -33,31 +33,44 @@ def get_local_timezone():
         print("Could not determine location. Using UTC as default.")  
         return 'UTC'  
 
-def check_local_time(database, time2, c):  
+def check_local_time(database, notification_time, check_type):  
     timezone = get_local_timezone()  
     if timezone is None:  
         return   
 
     while True:  
         local_time = datetime.now(pytz.timezone(timezone))  
-        if c == 2:  
-            if local_time.hour >= time2:  
+        if check_type == 2:  
+            if local_time.hour >= notification_time:  
                 set_undone_states(database)   
-        elif c == 1:  
-            if local_time.hour == time2 and local_time.minute == 0:  
+        elif check_type == 1:  
+            if local_time.hour == notification_time and local_time.minute == 0:  
                 send_notification()  
 
-        time.sleep(300)  
+        time.sleep(60)  
 
 def start_background_task_undone(database):  
     scheduler_thread = threading.Thread(target=check_local_time, args=(database, 24, 2))  
     scheduler_thread.daemon = True  
     scheduler_thread.start()  
 
-def start_background_task_notification(database, time2):  
-    scheduler_thread = threading.Thread(target=check_local_time, args=(database, time2, 1))  
+def start_background_task_notification(database, notification_time):  
+    scheduler_thread = threading.Thread(target=check_local_time, args=(database, notification_time, 1))  
     scheduler_thread.daemon = True  
     scheduler_thread.start()  
+
+def stop_existing_notification_thread():  
+    global notification_thread  
+    if notification_thread is not None and notification_thread.is_alive():  
+        print("Stopping existing notification thread.")  
+        notification_thread = None
+
+def set_notification_time(database,new_time):  
+    if 0 <= new_time < 24:  
+        stop_existing_notification_thread()  
+        start_background_task_notification(database, new_time)  
+    else:  
+        print("Invalid notification time. Please enter an hour between 0 and 23.")  
 
 def set_undone_states(database):  
     query_undone_days = QSqlQuery()  

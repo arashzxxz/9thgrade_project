@@ -10,50 +10,6 @@ class style_sheets(QWidget):
     widgets_hoverc="rgba(24, 99, 22, 150)"
     menu_backgroundc="Black"
     menu_widgetsc="Blue"
-    required_settings_customaization_tab="""
-    QPushButton#back_button{
-        padding: 25px 25px 25px 25px;
-        background: transparent;
-    }
-    """
-    requierd_settings_style="""
-    QLabel#separator1{
-        border : solid black;
-        border-width : 5px 0px 0px 0px;
-    }
-    QLabel#separator2{
-        border : solid black;
-        border-width : 5px 0px 0px 0px;
-    }
-    QLabel#separator3{
-        border : solid black;
-        border-width : 5px 0px 0px 0px;
-    }
-    QLabel#header1{
-        font:30px;
-        font-family: Arial;
-    }
-    QLabel#header2{
-        font:30px;
-        font-family: Arial;
-    }
-    QLabel#header3{
-        font:30px;
-        font-family: Arial;
-    }
-    """
-    main_style="""
-        background-color : """+backgroundc+""";
-        QPushButton{
-        background-color : """+widgetsc+""";
-        }
-        QPushButton:hover{
-        background-color : """+widgets_hoverc+""";
-        }
-        QWidget{
-        color: Black;
-        }
-    """
     menu_style="""
         QRadioButton#menub::indicator::unchecked{
                            background-color: transparent;
@@ -122,15 +78,13 @@ class style_sheets(QWidget):
                            
         }
         QRadioButton#streakb::indicator::checked{
-                           background-color: """+selected_tabc+""";
+                           background-color: transparent;
                            border-radius: 0px ;
                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);
                            
         }
-    QRadioButton{
-    }
     QRadioButton:hover{
-        background-color: """+widgets_hoverc+"""
+        background-color: #014d02;
     }
 
     """

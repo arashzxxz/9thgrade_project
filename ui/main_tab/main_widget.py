@@ -43,6 +43,7 @@ class Main_widget(QWidget):
 
         #set the layout
         self.setLayout(self.main_layout)
+        #self.set_stylesheet()
         #--------------
 
     #connect all the buttons
@@ -53,7 +54,7 @@ class Main_widget(QWidget):
         self.backbutton.clicked.connect(lambda : tabs.setCurrentIndex(7))
         self.submit_button.clicked.connect(lambda : self.submit_current_day_data(data_base,clender_widget))
     #-----------------------
-    
+
     def submit_current_day_data(self,data_base,clender_widget):
         eaten_calories = int(self.current_day_content1.eaten_calories_entry.text())
         workout_time = int(self.current_day_content2.workout_time_entry.text())
@@ -92,7 +93,6 @@ class Main_widget(QWidget):
         query_update.exec_() 
         clender_widget.create_calendar_buttons()
         check_increased(data_base,current_date,day.days)
-    
     def clear_main_layout(self):  
         while self.main_layout.count():  
             item = self.main_layout.takeAt(0)  # Get the first item  
@@ -156,4 +156,16 @@ class Main_widget(QWidget):
         if query_schedule_info.exec_():  
             if query_schedule_info.next():  
                 needed_calories = query_schedule_info.value(15)  
-                self.current_day_content1.needed_calories_text2.setText(str(needed_calories))  
+                self.current_day_content1.needed_calories_text2.setText(str(needed_calories))
+        
+    def set_stylesheet(self):  
+        self.setStyleSheet("""  
+            QWidget { background-color: #1c1c1c; color: white; }  
+            QPushButton { background-color: #014d02; color: white; border-radius: 10px; padding: 10px; }  
+            QLabel { color: white; }  
+            QLineEdit { background-color: #1c1c1c; color: white; border-radius: 5px; padding: 5px; }  
+            QComboBox { background-color: #1c1c1c; color: white; border-radius: 5px; }  
+            QScrollBar:vertical { background: #1c1c1c; width: 10px; }  
+            QScrollBar::handle:vertical { background: #014d02; min-height: 20px; border-radius: 5px; }  
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { background: #1c1c1c; }  
+        """)  

@@ -44,7 +44,7 @@ def calculate_ideal_weight(age,gender,height,bmi):
         (167.64 + 173.99) / 2   # Age 18  
     ]  
     ideal_weight=0
-    if age<=19:
+    if age<19:
         if gender=="male":
             ideal_weight=2.27*age+10.5+(0.5*(height-males_avg[age-1]))
         if gender=="female":
@@ -81,4 +81,31 @@ def string_to_list(string, separator=', '):
     return string.split(separator) 
 def list_to_string(list, separator=', '):  
     return separator.join(map(str, list)) 
+
+def calculate_macronutrient_needed_perday(weight_kg, activity_level, age=None, sex=None):  
+    activity_factors = {  
+        'sedentary': (0.8, 3.0, 0.8),  
+        'lightly_active': (1.0, 4.0, 1.0),  
+        'moderately_active': (1.2, 5.0, 1.0),  
+        'very_active': (1.6, 6.0, 1.2),  
+        'super_active': (1.6, 8.0, 1.2)  
+    }  
+
+
+    protein_factor, carb_factor, fat_factor = activity_factors[activity_level]  
+
+    if age is not None and age >= 50:  
+        protein_factor = 1.2 if sex == 'male' else 1.0  
+
+    daily_protein_needs = weight_kg * protein_factor  
+    daily_carb_needs = weight_kg * carb_factor  
+    daily_fat_needs = weight_kg * fat_factor  
+    #all in grams :
+    macronutrient_needs = {  
+        'protein': daily_protein_needs,  
+        'carbohydrates': daily_carb_needs,  
+        'fat': daily_fat_needs  
+    }  
+    
+    return macronutrient_needs  
 
