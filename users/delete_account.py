@@ -15,7 +15,7 @@ def delete_account_backend(database):
 #------------------
 #delete the user
     query2=QSqlQuery()
-    query2.prepare("""DELETE FROM data WHERE Username = ? AND Password = ?""")
+    query2.prepare("""DELETE FROM User WHERE username = ? AND password = ?""")
     query2.addBindValue(username)
     query2.addBindValue(h_password)
     query2.exec_()

@@ -10,6 +10,8 @@ class Exercise_tab(QWidget):
         self.choose_timer_tab=QPushButton("Timer",self)
         self.choose_Suggestions_tab=QPushButton("Suggestions",self)
         self.timer_widget=timer.Timer()
+        self.backbutton=QPushButton("",self)
+        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png)")
         self.suggestions_widget=exercise_suggestion.Exercise_suggestions()
         self.tabs=QStackedWidget()
         self.tabs.addWidget(self.timer_widget)
@@ -19,8 +21,9 @@ class Exercise_tab(QWidget):
         #set the layouts
         self.main_layout=QVBoxLayout()
         self.button_layout=QHBoxLayout()
-        self.button_layout.addWidget(self.choose_timer_tab)
-        self.button_layout.addWidget(self.choose_Suggestions_tab)
+        self.button_layout.addWidget(self.backbutton,1)
+        self.button_layout.addWidget(self.choose_timer_tab,3)
+        self.button_layout.addWidget(self.choose_Suggestions_tab,3)
         self.button_layout.setContentsMargins(100,10,100,10)
         self.main_layout.addLayout(self.button_layout)
         self.main_layout.addWidget(self.tabs)
@@ -28,7 +31,8 @@ class Exercise_tab(QWidget):
         #------------------
 
     #connect all the buttons 
-    def connect_buttons(self):
+    def connect_buttons(self,tabs):
         self.choose_timer_tab.clicked.connect(lambda : self.tabs.setCurrentIndex(0))
         self.choose_Suggestions_tab.clicked.connect(lambda : self.tabs.setCurrentIndex(1))
+        self.backbutton.clicked.connect(lambda : tabs.setCurrentIndex(0))
 

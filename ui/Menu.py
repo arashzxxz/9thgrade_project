@@ -9,17 +9,20 @@ from users import current_user
 class Menu(QWidget):  
     def __init__(self):  
         super().__init__()  
+        self.home_times=0
         # Create buttons and group them  
         self.menu_button = QRadioButton("Menu", self)  
         self.home_button = QRadioButton("Home", self)  
         self.setting_button = QRadioButton("Settings", self)  
         self.status_button = QRadioButton("Status", self)  
         self.users_button = QRadioButton("Users", self)
+        self.streak_button = QRadioButton("Streak", self)
         self.menu_button.setObjectName("menub")  
         self.home_button.setObjectName("homeb")  
         self.status_button.setObjectName("statusb")  
         self.setting_button.setObjectName("settingb")  
         self.users_button.setObjectName("usersb")  
+        self.streak_button.setObjectName("streakb")
         self.menus_buttons_group = QButtonGroup(self)  
         self.menus_buttons_group.addButton(self.menu_button)  
         self.menus_buttons_group.addButton(self.home_button)  
@@ -37,28 +40,37 @@ class Menu(QWidget):
         self.menu_layout.addWidget(self.status_button, 2, 0)  
         self.menu_layout.addWidget(QLabel(""), 3, 0)  # Spacer  
         self.menu_layout.addWidget(QLabel(""), 4, 0)  # Spacer  
-        self.menu_layout.addWidget(self.users_button, 5, 0)  
-        self.menu_layout.addWidget(self.setting_button, 6, 0)  
+        self.menu_layout.addWidget(self.streak_button, 5, 0)
+        self.menu_layout.addWidget(self.users_button, 6, 0)  
+        self.menu_layout.addWidget(self.setting_button, 7, 0)  
         self.menu_layout.setContentsMargins(0, 0, 0, 0)  
         self.setLayout(self.menu_layout)  
         #-------------------
     # Connecting buttons: called in main.py  
-    def connect_buttons(self, tabs):  
-        self.home_button.clicked.connect(lambda: self.home_button_clicked_function(tabs))  
-        self.status_button.clicked.connect(lambda: tabs.setCurrentIndex(1))  
+    def connect_buttons(self, tabs,tab,tab2):  
+        self.home_button.clicked.connect(lambda: self.home_button_clicked_function(tabs,tab))   
         self.setting_button.clicked.connect(lambda: tabs.setCurrentIndex(2))  
         self.users_button.clicked.connect(lambda: tabs.setCurrentIndex(4))  
-        self.menu_button.clicked.connect(self.expand_menu)    
+        self.menu_button.clicked.connect(self.expand_menu)  
+        self.status_button.clicked.connect(lambda : self.expand_chart_tab(tabs,tab2))  
     #--------------------------------------    
 
+    def expand_chart_tab(self,tabs,tab2):
+        if current_user.logged_in_user.log_in_status == True :
+            tab2.create_the_chart()
+            tabs.setCurrentIndex(9) 
+        if current_user.logged_in_user.log_in_status == False:   
+            tabs.setCurrentIndex(6)  
     # Home button clicked  
-    def home_button_clicked_function(self, tabs):  
+    def home_button_clicked_function(self, tabs,tab):  
         if current_user.logged_in_user.log_in_status == True:  
-            tabs.setCurrentIndex(0)  
+            tabs.setCurrentIndex(7)
+            if self.home_times==0:
+                tab.get_schedules()
+                self.home_times=1
         if current_user.logged_in_user.log_in_status == False:   
             tabs.setCurrentIndex(6)  
     #--------------------
-
     # Expand menu function  
     def expand_menu(self):  
         # Toggle visibility of texts
@@ -68,9 +80,11 @@ class Menu(QWidget):
             self.setting_button.setText("Settings") 
             self.status_button.setText("Status")  
             self.users_button.setText("User")
+            self.streak_button.setText("Streak")
         else:
             self.menu_button.setText("") 
             self.home_button.setText("") 
+            self.streak_button.setText("")
             self.setting_button.setText("") 
             self.status_button.setText("")  
             self.users_button.setText("")
