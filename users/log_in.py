@@ -7,7 +7,24 @@ from calculations.calculations import list_to_string,string_to_list
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtGui import QFontDatabase,QStandardItemModel,QStandardItem
-def log_in_backend(username,password,database,tabs,logged_in_tab):
+def get_streak(button):
+    query1=QSqlQuery()
+    query1.prepare("""SELECT * FROM User WHERE username = ? AND password = ?""")
+    query1.addBindValue(current_user.logged_in_user.username)
+    query1.addBindValue(current_user.logged_in_user.password)
+    query1.exec_()
+    a = query1.value(6)
+    if a == datetime.today() : 
+        button.setStyleSheet("""
+            QRadioButton#streakb::indicator::unchecked{
+                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                            
+            }
+            QRadioButton#streakb::indicator::checked{
+                            image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                            
+            }""")  
+def log_in_backend(username,password,database,tabs,logged_in_tab,button):
 # hash the password
     h=hashlib.new("SHA256")
     h.update(password.encode())
@@ -25,10 +42,10 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         return "404"
     else :
         query_update = QSqlQuery()
-        query_update.prepare("""UPDATE User WHERE username = ? AND password = ? SET last_day_online = ?""") 
+        query_update.prepare("""UPDATE User SET last_day_online = ? WHERE username = ? AND password = ?""") 
+        query_update.addBindValue(datetime.today())
         query_update.addBindValue(username)
         query_update.addBindValue(h_password)
-        query_update.addBindValue(datetime.today())
         query_update.exec_()
         # get the users info
         data_id_wh=str(query1.value(0))
@@ -39,6 +56,7 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         current_user.logged_in_user.freeze = int(query1.value(5))
         current_user.logged_in_user.streak=int(query1.value(3))
         current_user.logged_in_user.last_day_online=datetime.today()
+        current_user.logged_in_user.last_day_streak=query1.value(6)
         current_user.logged_in_user.password=password
         current_user.logged_in_user.username=username
         current_user.logged_in_user.log_in_status=True
@@ -62,7 +80,9 @@ def log_in_backend(username,password,database,tabs,logged_in_tab):
         logged_in_tab.age.setText(current_user.logged_in_user.age)
         logged_in_tab.gender.setText(current_user.logged_in_user.gender)
         update_data_base(database)
+        get_streak(button)
         return "0"
+    
         #-----------
 #--------------------------------
 def update_data_base(database)  :

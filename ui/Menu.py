@@ -71,7 +71,6 @@ class Menu(QWidget):
         if current_user.logged_in_user.log_in_status == False:   
             tabs.setCurrentIndex(6)  
     #--------------------
-
     # Expand menu function  
     def expand_menu(self):  
         # Toggle visibility of texts

@@ -100,14 +100,18 @@ class logged_in_tab(QWidget):
         # create all the widgets
         self.username=QLabel(current_user.logged_in_user.username,self)
         self.username.setAlignment(Qt.AlignTop | Qt.AlignRight)
-        self.weight=QLabel(current_user.logged_in_user.username,self)
+        self.weight=QLabel(current_user.logged_in_user.weight,self)
         self.weight.setAlignment(Qt.AlignTop | Qt.AlignRight)
-        self.height1=QLabel(current_user.logged_in_user.username,self)
+        self.height1=QLabel(current_user.logged_in_user.height,self)
         self.height1.setAlignment(Qt.AlignTop | Qt.AlignRight)
-        self.age=QLabel(current_user.logged_in_user.username,self)
+        self.age=QLabel(current_user.logged_in_user.age,self)
         self.age.setAlignment(Qt.AlignTop | Qt.AlignRight)
-        self.gender=QLabel(current_user.logged_in_user.username,self)
+        self.gender=QLabel(current_user.logged_in_user.gender,self)
         self.gender.setAlignment(Qt.AlignTop | Qt.AlignRight)
+        self.streak=QLabel("streak : " + str(current_user.logged_in_user.streak),self)
+        self.streak.setAlignment(Qt.AlignTop | Qt.AlignRight)
+        self.freezes=QLabel("freezes : " + str(current_user.logged_in_user.freeze),self)
+        self.freezes.setAlignment(Qt.AlignTop | Qt.AlignRight)
         self.log_out_button=QPushButton("Log out",self)
         self.delete_account_button=QPushButton("Delete account",self)
         #----------------------
@@ -121,6 +125,8 @@ class logged_in_tab(QWidget):
         self.info_layout.addWidget(self.height1)
         self.info_layout.addWidget(self.age)
         self.info_layout.addWidget(self.gender)
+        self.info_layout.addWidget(self.streak)
+        self.info_layout.addWidget(self.freezes)
         self.button_layout.addWidget(self.delete_account_button)
         self.button_layout.addWidget(self.log_out_button)
         self.main_layout.addLayout(self.info_layout)
@@ -183,7 +189,7 @@ class connect_pages(QWidget):
         #---------------
 
     #connect all buttons
-    def connect_buttons(self,tabs,database):
+    def connect_buttons(self,tabs,database,button):
         self.sign_in_tab.password_entry.textChanged.connect(self.change_password_entry_error_and_security)
         self.sign_in_tab.confirm_password_entry.textChanged.connect(lambda : self.sign_in_tab.show_error_confirm_password.setText(""))
         self.sign_in_tab.username_entry.textChanged.connect(lambda : self.sign_in_tab.show_error_username.setText(""))
@@ -192,6 +198,7 @@ class connect_pages(QWidget):
         self.choose_tab1.clicked.connect(self.choose_tab1_f)
         self.choose_tab2.clicked.connect(self.choose_tab2_f)
         self.database=database
+        self.button = button
         self.sign_in_tab.sign_in_button.clicked.connect(self.gather_sign_in_info)
         self.log_in_tab.log_in_button.clicked.connect(self.gather_log_in_info)
         self.loged_in_tab.delete_account_button.clicked.connect(self.delete_account_confirmation)
@@ -277,7 +284,7 @@ class connect_pages(QWidget):
         if self.justwhitespace_pattern.findall(password) :
             self.log_in_tab.show_error_password.setText("Please enter a password")
         else :
-            exit_code=log_in.log_in_backend(user,password,self.database,self.main_widget,self.loged_in_tab)
+            exit_code=log_in.log_in_backend(user,password,self.database,self.main_widget,self.loged_in_tab,self.button)
             if exit_code=="404":
                 self.log_in_tab.show_error_overall.setText(f"user does not exist , error code : {exit_code}")
             if exit_code=="0":

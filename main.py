@@ -1,4 +1,5 @@
 import sys
+import os
 from assets.assests import get_assets_working_dir
 from users import current_user
 from datetime import datetime
@@ -11,7 +12,6 @@ from ui.main_tab import calendar_widget,main_widget,timer,log_in_error
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
 from PyQt5.QtWidgets import QApplication,QMainWindow,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout
 from PyQt5.QtGui import QIcon
-from data import update_streak
 class mainw(QMainWindow):
     def __init__(self):
         #create main window
@@ -36,7 +36,6 @@ class mainw(QMainWindow):
         #update_button(self.database)
         check_time.start_background_task_undone(self.database)
         check_time.start_background_task_notification(self.database, 12)
-        update_streak.get_menu(self.main_menu)
         self.main_menu.home_button.setChecked(1)
         #--------------------------------------------
 
@@ -95,15 +94,41 @@ class mainw(QMainWindow):
             QMessageBox.critical(None, "Error", "Could not open the database: " + self.database.lastError().text())  
             sys.exit(1)  
         #------------------
-        
+            
+    def get_streak(self):
+        query1=QSqlQuery()
+        query1.prepare("""SELECT * FROM User WHERE username = ? AND password = ?""")
+        query1.addBindValue(current_user.logged_in_user.username)
+        query1.addBindValue(current_user.logged_in_user.password)
+        query1.exec_()
+        a = query1.value(6)
+        if a == datetime.today() : 
+            self.main_menu.streak_button.setStyleSheet("""
+                QRadioButton#streakb::indicator::unchecked{
+                                image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                                
+                }
+                QRadioButton#streakb::indicator::checked{
+                                image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                                
+                }""")  
+        if query1.value(3) == 10:
+            query_freeze = QSqlQuery()  
+            query_freeze.prepare("""UPDATE User SET freeze = ? WHERE username = ? AND password = ?""")  
+            if not current_user.logged_in_user.freeze:
+                current_user.logged_in_user.freeze=0
+            query_freeze.addBindValue(current_user.logged_in_user.freeze + 1)  
+            query_freeze.addBindValue(current_user.logged_in_user.username)  
+            query_freeze.addBindValue(current_user.logged_in_user.password)          
+            query_freeze.exec_()
 
     #connect all of the buttons
     def connect_all_buttons(self):
         self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab)
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs,self)
-        self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database)
-        self.main_tab.connect_buttons(self.tabs,self.database,self.main_tab.calendar_widget)
+        self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database,self.main_menu.streak_button)
+        self.main_tab.connect_buttons(self.tabs,self.database,self.main_tab.calendar_widget,self.main_menu.streak_button)
         self.exercise_tab.timer_widget.connect_buttons()
         self.exercise_tab.connect_buttons(self.tabs)
         self.main_tab_schedules.connect_buttons(self.tabs)
@@ -246,16 +271,6 @@ class mainw(QMainWindow):
             QRadioButton:pressed {margin: 4px 4px 4px 4px;}     
         """)  
         self.save_theme(background,button,font)
-    def set_streak_button (self):
-        self.main_menu.streak.streak_button.setStyleSheet("""
-        QRadioButton#streakb::indicator::unchecked{
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
-                           
-        }
-        QRadioButton#streakb::indicator::checked{
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
-                           
-        }""")
 
 
 

@@ -1,9 +1,10 @@
+import os
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery  
 from users import current_user  
-from datetime import datetime  
+from datetime import datetime 
+from assets.assests import get_assets_working_dir 
 from calculations.calculations import string_to_list, list_to_string  
-
-def check_increased(database, date, days):   
+def check_increased(database, date, days,button):   
     
     query = QSqlQuery()  
     query.prepare("""SELECT * FROM Data WHERE id = ? AND number = ?""")  
@@ -26,10 +27,11 @@ def check_increased(database, date, days):
             if list_status[days] != "none" and t == 0:  
                 t = 1  
                 streak_increment_update = QSqlQuery()  
-                streak_increment_update.prepare(  
-                    """UPDATE User SET last_day_online = ?, streak = ? WHERE username = ? AND password = ?"""  
-                )  
-                streak_increment_update.addBindValue(current_user.logged_in_user.streak + 1)  
+                streak_increment_update.prepare("""UPDATE User SET last_day_streak = ?, streak = ? WHERE username = ? AND password = ?""")  
+                streak_increment_update.addBindValue(str(datetime.today()))  
+                current_user.logged_in_user.last_day_streak = datetime.today()
+                if not current_user.logged_in_user.streak :
+                    current_user.logged_in_user.streak = 0
                 streak_increment_update.addBindValue(current_user.logged_in_user.streak + 1)  
                 streak_increment_update.addBindValue(current_user.logged_in_user.username)  
                 streak_increment_update.addBindValue(current_user.logged_in_user.password)  
@@ -40,9 +42,16 @@ def check_increased(database, date, days):
                 
                 current_user.logged_in_user.streak += 1  
 
-    if t == 1:  
-        from main import window 
-        window.set_streak_button()  
+    if t == 1:
+        button.setStyleSheet("""
+        QRadioButton#streakb::indicator::unchecked{
+                        image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                        
+        }
+        QRadioButton#streakb::indicator::checked{
+                        image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                        
+        }""")  
 
 def check_decreased(database, date):  
     query = QSqlQuery()  

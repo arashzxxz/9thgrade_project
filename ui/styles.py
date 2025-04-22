@@ -2,7 +2,9 @@ from ui import Menu, Settings_Tab,styles
 from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
+from assets.assests import get_assets_working_dir
 class style_sheets(QWidget):
+    wd = get_assets_working_dir
     backgroundc="#2f3030"
     borderc="Green"
     selected_tabc="rgba(24, 99, 22, 255)"

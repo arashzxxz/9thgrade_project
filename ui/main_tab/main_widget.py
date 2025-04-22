@@ -47,15 +47,15 @@ class Main_widget(QWidget):
         #--------------
 
     #connect all the buttons
-    def connect_buttons(self,tabs,data_base,clender_widget):
+    def connect_buttons(self,tabs,data_base,clender_widget,button):
         self.calendar_widget.get_data_base(data_base)
         self.current_day_content2.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(5))
         self.current_day_content1.expand_button.clicked.connect(lambda : tabs.setCurrentIndex(8))
         self.backbutton.clicked.connect(lambda : tabs.setCurrentIndex(7))
-        self.submit_button.clicked.connect(lambda : self.submit_current_day_data(data_base,clender_widget))
+        self.submit_button.clicked.connect(lambda : self.submit_current_day_data(data_base,clender_widget,button))
     #-----------------------
 
-    def submit_current_day_data(self,data_base,clender_widget):
+    def submit_current_day_data(self,data_base,clender_widget,button):
         eaten_calories = int(self.current_day_content1.eaten_calories_entry.text())
         workout_time = int(self.current_day_content2.workout_time_entry.text())
         query1 = QSqlQuery()
@@ -92,7 +92,7 @@ class Main_widget(QWidget):
         query_update.addBindValue(current_user.logged_in_user.selected_schedule)
         query_update.exec_() 
         clender_widget.create_calendar_buttons()
-        check_increased(data_base,current_date,day.days)
+        check_increased(data_base,current_date,day.days,button)
     def clear_main_layout(self):  
         while self.main_layout.count():  
             item = self.main_layout.takeAt(0)  # Get the first item  

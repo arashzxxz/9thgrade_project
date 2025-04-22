@@ -13,4 +13,5 @@ class users ():
         self.streak=0
         self.freeze=0
         self.last_day_online = "none"
+        self.last_day_streak = "none"
 logged_in_user=users()
