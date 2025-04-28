@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QDateEdit,QTableW
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
 from assets.assests import get_assets_working_dir
 class style_sheets(QWidget):
-    wd = get_assets_working_dir
+    wd = get_assets_working_dir()
     backgroundc="#2f3030"
     borderc="Green"
     selected_tabc="rgba(24, 99, 22, 255)"

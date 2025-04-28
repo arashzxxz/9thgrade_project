@@ -1,6 +1,6 @@
 
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout,QPushButton, QHBoxLayout,  QLabel, QListWidget, QMessageBox
-
+import api
 class Food_suggestions(QWidget):  
     def __init__(self):  
         super().__init__()  
@@ -16,21 +16,12 @@ class Food_suggestions(QWidget):
     def connect_buttons(self,tabs):
         self.backbutton.clicked.connect(lambda : tabs.setCurrentIndex(0))
 
-    def create_foods_sections(self):  
+    def create_foods_sections(self,high_budget_foods,low_budget_foods):  
         # Create a QWidget for exercises  
         foods_widget = QWidget()  
         foods_layout = QHBoxLayout()  
 
-        # High Budget foods  
-        high_budget_foods = [("food #1", "Explanation for food #1."),  
-                                  ("food #2", "Explanation for food #2."),  
-                                  ("food #3", "Explanation for food #3."),  
-                                  ("food #4", "Explanation for food #4.")]  
-        
-        low_budget_foods = [("food #5", "Explanation for food #5."),  
-                                ("food #6", "Explanation for food #6."),  
-                                ("food #7", "Explanation for food #7."),  
-                                ("food #8", "Explanation for food #8.")]  
+         
 
         # Create sections for each budget category  
         self.create_exercise_section(foods_layout, "High Budget", high_budget_foods)  
@@ -66,3 +57,10 @@ class Food_suggestions(QWidget):
             if food[0] == food_name:  
                 explanation_label.setText(food[1])  
                 break  
+    def change_suggestions(self,p,c,f):
+        low, high = api.get_food_suggestions(protein=p,fat=f,carbohydrates=c)
+        h_t = self.dict_to_food_list(high)
+        l_t = self.dict_to_food_list(low)
+        self.create_foods_sections(self,h_t,l_t)
+    def dict_to_food_list(self,food_dict):
+        return [(food, explanation) for food, explanation in food_dict.items()]

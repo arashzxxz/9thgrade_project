@@ -1,6 +1,7 @@
 import sys  
 import hashlib as hash
 import re
+from assets.assests import get_assets_working_dir
 from calculations import calculations as cal
 from datetime import date,timedelta,datetime
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
