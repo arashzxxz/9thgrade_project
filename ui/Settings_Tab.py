@@ -5,6 +5,8 @@ from PyQt5.QtCore import Qt,QTime,QTimer,QDate,QSize
 from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QTimeEdit,QScrollArea,QStackedWidget,QDateEdit,QTableWidgetItem,QMessageBox,QTabWidget, QWidget,QFileDialog, QLabel,QListWidget ,QComboBox,QPushButton ,QVBoxLayout,QTableWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QCheckBox,QRadioButton,QButtonGroup,QLineEdit
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
 from calculations import check_time
+from assets.assests import get_assets_working_dir
+from users.current_user import logged_in_user
 
 class setting_tab(QWidget):
     def __init__(self,database):
@@ -106,8 +108,11 @@ class setting_tab(QWidget):
     def settings_data(self):
 
         #create buttons and texts
+        
         self.delete_all_apps_data=QPushButton("Delete all data",self)
         self.delete_all_users_data=QPushButton("Delete all users data",self)
+        if logged_in_user.username == "admin" and logged_in_user.password == "admin" :
+            self.delete_all_apps_data.hide()
         #------------------------
 
         #create main widget and main layout
@@ -136,12 +141,13 @@ class setting_tab(QWidget):
     #---------------------
         
     def delete_all_data(self):
-        query1=QSqlQuery()
-        query1.prepare("""DROP TABLE IF EXISTS User """)
-        query1.exec_()
-        query2=QSqlQuery()
-        query2.prepare("""DROP TABLE IF EXISTS Data """)
-        query2.exec_()
+        if logged_in_user.username == "admin" and logged_in_user.password == "admin" :
+            query1=QSqlQuery()
+            query1.prepare("""DROP TABLE IF EXISTS User """)
+            query1.exec_()
+            query2=QSqlQuery()
+            query2.prepare("""DROP TABLE IF EXISTS Data """)
+            query2.exec_()
     #create notification layout
     def settings_notification(self):
 
@@ -191,7 +197,7 @@ class setting_customization_tab(QWidget):
         self.tab1_group_button_layout.addWidget(self.background)
         self.tab1_group_button_layout.addWidget(QLabel("Font Color : "))
         self.tab1_group_button_layout.addWidget(self.FontColor)
-        self.back_button.setIcon(QIcon('C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png'))
+        self.back_button.setIcon(QIcon(get_assets_working_dir()+'back.png'))
         size=QSize(40,40)
         self.back_button.setIconSize(size)
         self.header=QLabel("Change Theme",self)

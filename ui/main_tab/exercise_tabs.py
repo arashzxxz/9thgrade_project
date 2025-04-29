@@ -1,7 +1,7 @@
 
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout,QStackedWidget,  QLabel, QListWidget, QMessageBox,QPushButton
 from ui.main_tab import timer,exercise_suggestion
-
+from assets.assests import get_assets_working_dir
 class Exercise_tab(QWidget):  
     def __init__(self):  
         super().__init__()  
@@ -11,7 +11,7 @@ class Exercise_tab(QWidget):
         self.choose_Suggestions_tab=QPushButton("Suggestions",self)
         self.timer_widget=timer.Timer()
         self.backbutton=QPushButton("",self)
-        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png)")
+        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url("+get_assets_working_dir()+"back.png)")
         self.suggestions_widget=exercise_suggestion.Exercise_suggestions()
         self.tabs=QStackedWidget()
         self.tabs.addWidget(self.timer_widget)

@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTreeView, QDateEdit, QT
                              QComboBox, QPushButton, QVBoxLayout, QTableWidget, QHBoxLayout,   
                              QGridLayout, QCheckBox, QRadioButton, QButtonGroup, QLineEdit)  
 from PyQt5.QtCore import Qt  
-from users import current_user  
+from users import current_user 
 
 
 class Menu(QWidget):  
@@ -47,14 +47,17 @@ class Menu(QWidget):
         self.setLayout(self.menu_layout)  
         #-------------------
     # Connecting buttons: called in main.py  
-    def connect_buttons(self, tabs,tab,tab2):  
+    def connect_buttons(self, tabs,tab,tab2,s):  
         self.home_button.clicked.connect(lambda: self.home_button_clicked_function(tabs,tab))   
-        self.setting_button.clicked.connect(lambda: tabs.setCurrentIndex(2))  
+        self.setting_button.clicked.connect(lambda: self.set_settings(s,tabs))  
         self.users_button.clicked.connect(lambda: tabs.setCurrentIndex(4))  
         self.menu_button.clicked.connect(self.expand_menu)  
         self.status_button.clicked.connect(lambda : self.expand_chart_tab(tabs,tab2))  
     #--------------------------------------    
-
+    def set_settings(self,s,tabs):
+        tabs.setCurrentIndex(2)
+        if current_user.logged_in_user.username == "admin" and current_user.logged_in_user.password == "admin" :
+            s.delete_all_apps_data.show()
     def expand_chart_tab(self,tabs,tab2):
         if current_user.logged_in_user.log_in_status == True :
             tab2.create_the_chart()

@@ -17,7 +17,7 @@ class mainw(QMainWindow):
         #create main window
         super(mainw,self).__init__()
         self.setWindowTitle('FitLife')
-        self.setWindowIcon(QIcon("C:/Users/r/Contacts/Desktop/9thgrade_project/assets/logo.png"))
+        self.setWindowIcon(QIcon(get_assets_working_dir() + "logo.png"))
         self.Width = 1000
         self.height = int(0.618 * self.Width)
         self.resize(self.Width, self.height)
@@ -105,11 +105,11 @@ class mainw(QMainWindow):
         if a == datetime.today() : 
             self.main_menu.streak_button.setStyleSheet("""
                 QRadioButton#streakb::indicator::unchecked{
-                                image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                                image: url(""" + get_assets_working_dir() + """/streak_done.png);
                                 
                 }
                 QRadioButton#streakb::indicator::checked{
-                                image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                                image: url(""" + get_assets_working_dir() + """/streak_done.png);
                                 
                 }""")  
         if query1.value(3) == 10:
@@ -124,7 +124,7 @@ class mainw(QMainWindow):
 
     #connect all of the buttons
     def connect_all_buttons(self):
-        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab)
+        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab,self.settings_tab)
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs,self)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database,self.main_menu.streak_button)
@@ -157,6 +157,7 @@ class mainw(QMainWindow):
         self.main_tab.current_day_content1.needed_calories_text2.setText(str(needed_calories))
         self.tabs.setCurrentIndex(0)
         self.main_tab.calendar_widget.create_calendar_buttons()
+        self.food_suggestion_tab.change_suggestions(query_schedule_info.value(17),query_schedule_info.value(16),query_schedule_info.value(18))
 
     def initui(self):
         #create all of the main tabs
@@ -249,7 +250,7 @@ class mainw(QMainWindow):
         bg1, bg2 = background_colors.get(background, (None, None))  
         b1, b2 = button_colors.get(button, (None, None))  
         self.setStyleSheet("""  
-            QWidget { background-color: """+bg1+"""; color: """+fc+""";}  
+            QWidget { background-color: """+bg1+"""; color: """+fc+"""; font-size: 16px;}  
             QPushButton { color: """+fc+"""; border-radius: 10px; padding: 10px; background-color: """+b1+""";}  
             QLabel { color: """+fc+"""; }  
             QLineEdit { background-color: """+bg1+"""; color: """+fc+"""; border-radius: 5px; padding: 5px; }  

@@ -3,6 +3,7 @@ import json
 import re
 def get_food_suggestions(protein, fat, carbohydrates):
     try:
+        # Build prompt asking for JSON format with two sections
         prompt_text = (
             f"Suggest food ideas and recipes that match approximately "
             f"{protein}g protein, {fat}g fat, and {carbohydrates}g carbohydrates.\n"

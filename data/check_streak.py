@@ -45,11 +45,11 @@ def check_increased(database, date, days,button):
     if t == 1:
         button.setStyleSheet("""
         QRadioButton#streakb::indicator::unchecked{
-                        image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                        image: url("""+get_assets_working_dir()+"""streak_done.png);
                         
         }
         QRadioButton#streakb::indicator::checked{
-                        image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_done.png);
+                        image: url("""+get_assets_working_dir()+"""streak_done.png);
                         
         }""")  
 

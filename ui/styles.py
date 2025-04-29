@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeView,QDateEdit,QTableW
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QFontDatabase
 from assets.assests import get_assets_working_dir
 class style_sheets(QWidget):
-    wd = get_assets_working_dir
+    wd = get_assets_working_dir()
     backgroundc="#2f3030"
     borderc="Green"
     selected_tabc="rgba(24, 99, 22, 255)"
@@ -16,73 +16,73 @@ class style_sheets(QWidget):
         QRadioButton#menub::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png);
+                           image: url("""+get_assets_working_dir()+"""menu.png);
                            
         }
         QRadioButton#menub::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/menu.png);
+                           image: url("""+get_assets_working_dir()+"""menu.png);
                            
         }
         QRadioButton#settingb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png);
+                           image: url("""+get_assets_working_dir()+"""settings.png);
                            
         }
         QRadioButton#settingb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/settings.png);
+                           image: url("""+get_assets_working_dir()+"""settings.png);
                            
         }
         QRadioButton#homeb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png);
+                           image: url("""+get_assets_working_dir()+"""home.png);
                            
         }
         QRadioButton#homeb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/home.png);
+                           image: url("""+get_assets_working_dir()+"""home.png);
                            
         }
         QRadioButton#statusb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png);
+                           image: url("""+get_assets_working_dir()+"""status.png);
                            
         }
         QRadioButton#statusb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/status.png);
+                           image: url("""+get_assets_working_dir()+"""status.png);
                            
         }
         QRadioButton#usersb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/users.png);
+                           image: url("""+get_assets_working_dir()+"""users.png);
                            
         }
         QRadioButton#usersb::indicator::checked{
                            background-color: """+selected_tabc+""";
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/users.png);
+                           image: url("""+get_assets_working_dir()+"""users.png);
                            
         }
         QRadioButton#streakb::indicator::unchecked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);
+                           image: url("""+get_assets_working_dir()+"""streak_undone.png);
                            
         }
         QRadioButton#streakb::indicator::checked{
                            background-color: transparent;
                            border-radius: 0px ;
-                           image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/streak_undone.png);
+                           image: url("""+get_assets_working_dir()+"""streak_undone.png);
                            
         }
     QRadioButton:hover{

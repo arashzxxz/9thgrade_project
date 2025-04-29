@@ -1,6 +1,7 @@
 import sys  
 import hashlib as hash
 import re
+from assets.assests import get_assets_working_dir
 from calculations import calculations as cal
 from datetime import date,timedelta,datetime
 from PyQt5.QtSql import QSqlDatabase,QSqlQuery
@@ -140,7 +141,7 @@ class SchedulesTab(QMainWindow):
         self.expand_button.hide()
         self.layout.addLayout(self.main_layout, 80)   
         self.layout.addWidget(self.expand_button, 10)   
-        self.expand_button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/expand.png)")  
+        self.expand_button.setStyleSheet("background-color: transparent; border-radius: 0px; image: url("+get_assets_working_dir()+"expand.png)")  
         self.add_button.clicked.connect(self.show_user_input_dialog)  
     def get_database(self,database):
         self.database=database
@@ -261,16 +262,16 @@ class SchedulesTab(QMainWindow):
 
                     if state == "done":  
                         daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png);")  
+                                                "background-color: transparent; image: url("+get_assets_working_dir()+"done.png);")  
                     elif state == "none":  
                         daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png);")  
+                                                "background-color: transparent; image: url("+get_assets_working_dir()+"none.png);")  
                     elif state == "undone":  
                         daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png);")  
+                                                "background-color: transparent; image: url("+get_assets_working_dir()+"undone.png);")  
                     elif state == "perfect":  
                         daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                                "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png);")  
+                                                "background-color: transparent; image: url("+get_assets_working_dir()+"perfect.png);")  
                     x=i%7
                     y=(i-i%7)/7
                     self.days_buttons_layout.addWidget(daybutton,int(y),int(x)) 
@@ -310,16 +311,16 @@ class SchedulesTab(QMainWindow):
 
                 if state == "done":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"done.png);")  
                 elif state == "none":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"none.png);")  
                 elif state == "undone":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"undone.png);")  
                 elif state == "perfect":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"perfect.png);")  
                 x=i%7
                 y=(i-i%7)/7
                 self.days_buttons_layout.addWidget(daybutton,int(y),int(x)) 

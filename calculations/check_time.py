@@ -25,7 +25,6 @@ def get_local_timezone():
     if location is not None:  
         latitude = location.latitude  
         longitude = location.longitude  
-        print(f"Detected location: {location.address}")  
         tf = TimezoneFinder()  
         timezone = tf.timezone_at(lat=latitude, lng=longitude)  
         return timezone  

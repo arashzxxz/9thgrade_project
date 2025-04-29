@@ -1,6 +1,7 @@
 
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout,QPushButton, QHBoxLayout,  QLabel, QListWidget, QMessageBox
-
+from calculations.chatgpt_api import get_food_suggestions
+from assets.assests import get_assets_working_dir
 class Food_suggestions(QWidget):  
     def __init__(self):  
         super().__init__()  
@@ -8,35 +9,24 @@ class Food_suggestions(QWidget):
         self.layout = QVBoxLayout()  
         self.buttons_layout=QHBoxLayout()
         # create the exercise lists  
-        self.create_foods_sections() 
         #-------------------------- 
-
+        self.backbutton=QPushButton("",self)
+        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url("+get_assets_working_dir()+"back.png)")
         self.setLayout(self.layout)  
 
     def connect_buttons(self,tabs):
         self.backbutton.clicked.connect(lambda : tabs.setCurrentIndex(0))
 
-    def create_foods_sections(self):  
+    def create_foods_sections(self,high_budget_foods,low_budget_foods):  
         # Create a QWidget for exercises  
         foods_widget = QWidget()  
         foods_layout = QHBoxLayout()  
 
-        # High Budget foods  
-        high_budget_foods = [("food #1", "Explanation for food #1."),  
-                                  ("food #2", "Explanation for food #2."),  
-                                  ("food #3", "Explanation for food #3."),  
-                                  ("food #4", "Explanation for food #4.")]  
-        
-        low_budget_foods = [("food #5", "Explanation for food #5."),  
-                                ("food #6", "Explanation for food #6."),  
-                                ("food #7", "Explanation for food #7."),  
-                                ("food #8", "Explanation for food #8.")]  
+         
 
         # Create sections for each budget category  
         self.create_exercise_section(foods_layout, "High Budget", high_budget_foods)  
         self.create_exercise_section(foods_layout, "Low Budget", low_budget_foods)  
-        self.backbutton=QPushButton("",self)
-        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png)")
         foods_widget.setLayout(foods_layout)  
         self.buttons_layout.addWidget(self.backbutton,1)
         self.buttons_layout.addWidget(QLabel(""),4)
@@ -66,3 +56,12 @@ class Food_suggestions(QWidget):
             if food[0] == food_name:  
                 explanation_label.setText(food[1])  
                 break  
+    def change_suggestions(self,p,c,f):
+        low, high = get_food_suggestions(protein=p,fat=f,carbohydrates=c)
+        h_t = self.dict_to_food_list(high)
+        l_t = self.dict_to_food_list(low)
+        print(h_t)
+        print(l_t)
+        self.create_foods_sections(h_t,l_t)
+    def dict_to_food_list(self,food_dict):
+        return [(food, explanation) for food, explanation in food_dict.items()]
