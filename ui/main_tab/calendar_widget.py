@@ -8,6 +8,7 @@ from datetime import date,timedelta,datetime
 from data.day_button_handle import set_state
 from ui.main_tab import main_widget,current_day_content
 from users import current_user
+from assets.assests import get_assets_working_dir
 class DayButton(QPushButton):
     def __init__(self,name,date,state):  
         super().__init__(name)  
@@ -78,16 +79,16 @@ class Calendar_widget(QWidget):
 
                 if state == "done":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"done.png);")  
                 elif state == "none":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/none.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"none.png);")  
                 elif state == "undone":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"undone.png);")  
                 elif state == "perfect":  
                     daybutton.setStyleSheet(daybutton.styleSheet() +   
-                                            "background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png);")  
+                                            "background-color: transparent; image: url("+get_assets_working_dir()+"perfect.png);")  
                 self.button_layout.addWidget(daybutton) 
         #----------------------------------------- 
 

@@ -8,6 +8,7 @@ from calculations.calculations import string_to_list,list_to_string
 import main
 from data.check_streak import check_increased
 from ui.main_tab import calendar_widget,current_day_content
+from assets.assests import get_assets_working_dir
     
 
 class Main_widget(QWidget):  
@@ -30,7 +31,7 @@ class Main_widget(QWidget):
         self.date.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.date.setText(str(datetime.today().strftime("%Y / %m / %d")))
         self.backbutton=QPushButton("",self)
-        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/back.png)")
+        self.backbutton.setStyleSheet("background-color: transparent; border-radius: 0px; image: url("+get_assets_working_dir()+"back.png)")
         self.top_buttons_layout.addWidget(self.backbutton,1)
         self.top_buttons_layout.addWidget(self.date,3)
         self.current_day_content.addLayout(self.top_buttons_layout,10)
@@ -106,7 +107,7 @@ class Main_widget(QWidget):
         print("aaaaaaaaaaaaaaaaaaaaa")
         self.clear_main_layout()  
         icon_label = QLabel("")  
-        icon_label.setStyleSheet("background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/undone.png);")  
+        icon_label.setStyleSheet("background-color: transparent; image: url("+get_assets_working_dir()+"undone.png);")  
         text_label = QLabel("You didn't do your diet")  
         undone_layout = QHBoxLayout()  
         undone_layout.addWidget(icon_label)  
@@ -118,7 +119,7 @@ class Main_widget(QWidget):
     def set_mode_done(self):  
         self.clear_main_layout()  
         icon_label = QLabel("")  
-        icon_label.setStyleSheet("background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/done.png);")  
+        icon_label.setStyleSheet("background-color: transparent; image: url("+get_assets_working_dir()+"done.png);")  
         text_label = QLabel("nice")  
         done_layout = QHBoxLayout()  
         done_layout.addWidget(icon_label)  
@@ -130,10 +131,10 @@ class Main_widget(QWidget):
     def set_mode_perfect(self):  
         self.clear_main_layout()  
         icon_label = QLabel("")  
-        icon_label.setStyleSheet("background-color: transparent; image: url(C:/Users/r/Contacts/Desktop/9thgrade_project/assets/perfect.png);")  
+        icon_label.setStyleSheet("background-color: transparent; image: url("+get_assets_working_dir()+"perfect.png);")  
         text_label = QLabel("great job!")  
         perfect_layout = QHBoxLayout()  
-        perfect_layout.addWidget(icon_label)  #TODO : FIX the set_mode_* functions !!!!!!!!!!!!!!!!!!!!!!!!
+        perfect_layout.addWidget(icon_label)  
         perfect_layout.addWidget(text_label)
         self.main_layout.addWidget(self.calendar_widget)  
         self.calendar_widget.show()  

@@ -2,6 +2,8 @@ import os
 
 def get_assets_working_dir():  
     assets_directory = os.getcwd()  
-    full_directory = assets_directory + r"\assets"
+    full_directory = os.path.join(assets_directory, "assets")  
+    path_for_style = full_directory.replace('\\', '/') + '/'  
+    return path_for_style  
 
-    return full_directory
+get_assets_working_dir()  

@@ -17,7 +17,7 @@ class mainw(QMainWindow):
         #create main window
         super(mainw,self).__init__()
         self.setWindowTitle('FitLife')
-        self.setWindowIcon(QIcon(get_assets_working_dir() + "/logo.png"))
+        self.setWindowIcon(QIcon(get_assets_working_dir() + "logo.png"))
         self.Width = 1000
         self.height = int(0.618 * self.Width)
         self.resize(self.Width, self.height)
@@ -124,7 +124,7 @@ class mainw(QMainWindow):
 
     #connect all of the buttons
     def connect_all_buttons(self):
-        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab)
+        self.main_menu.connect_buttons(self.tabs,self.main_tab_schedules,self.chart_tab,self.settings_tab)
         self.settings_tab.connect_buttons(self.tabs,self.database)#incomplete
         self.settings_customization_tab.connect_buttons(self.tabs,self)
         self.log_in_and_sign_in_tab.connect_buttons(self.tabs,self.database,self.main_menu.streak_button)
