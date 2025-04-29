@@ -1,0 +1,1 @@
+first step while installing  :  create an admin user >>username<admin> , password<admin>
